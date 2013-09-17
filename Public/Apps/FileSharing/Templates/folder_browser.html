@@ -1,0 +1,10 @@
+
+<% _.each(files, function (file) { %>
+<div class="k_fs_thumbnail <% if (file.get('is_folder')) { %>k_fs_folder_tb<% } else { %>k_fs_file_tb<% }%>" data-file_id="<%= file.get('id') %>"  title="<%= file.get('name') %>">
+    <div class="k_fs_thunbnail_image <%= file.get("type").replace("/", "_").replace(".", "_") %>"></div>
+    <%= _s.truncate(file.get('name'), 7) %>
+    <div class="file_information">
+        <%= file.get("name") %>
+    </div>
+</div>
+<% }); %>

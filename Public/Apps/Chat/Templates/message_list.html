@@ -1,0 +1,53 @@
+<% var opened = 0 %>
+<% var user = 0 %>
+<% var date = -1 %>
+<% _.each(discussion.get('messages'), function (message) { %>
+
+<% if (user != message.get('sender').id) { %>
+
+
+<% console.log(user); %>
+<% user = message.get('sender').id %>
+<% if (opened > 0) { %>
+</div>
+<% } %>
+<div class="k_chat_message <% if (message.get('sender').id == current_user.get('id')) { %>k_chat_message_cu<% } else { %>k_chat_message_ou<% } %>">
+    <div class="k_chat_message_header">
+        <span style="font-weight: bold; color: white">
+        <% opened++; %>
+        <% if ((message.get('date').raw - (new Date().getTime()) / 1000) >= 24*60*60) { %>
+
+        <%= message.get('date').day %>/<%= message.get('date').month %>/<%= message.get('date').year %>
+        <% } %>
+        <%= message.get('date').hour %>:<%= message.get('date').minute %>
+            </span>
+        <b><% if (message.get('sender').id == current_user.get('id')) { %>You<% } else { %><%=
+            message.get('sender').username %><% } %></b>
+    </div>
+
+    <div class="k_chat_message_content">
+        <% date = Math.round(message.get('date').raw / 60) %>
+        <%= message.get('content') %>
+    </div>
+
+
+    <% } else { %>
+    <div class="k_chat_message_content">
+        <% if (Math.abs(date - Math.round(message.get('date').raw / 60)) > 5.5) { %>
+
+        <div style="font-weight: bold; color: white">
+            <% date = Math.round(message.get('date').raw / 60) %>
+
+            <% if ((message.get('date').raw - (new Date().getTime()) / 1000) >= 24*60*60) { %>
+            <%= message.get('date').day %>/<%= message.get('date').month %>/<%= message.get('date').year %>
+            <% } %>
+            <%= message.get('date').hour %>:<%= message.get('date').minute %>
+        </div>
+        <% } %>
+        <% console.log(date); %>
+        <% date = Math.round(message.get('date').raw / 60) %>
+        <%= message.get('content') %>
+    </div>
+    <% } %>
+
+    <% }); %>

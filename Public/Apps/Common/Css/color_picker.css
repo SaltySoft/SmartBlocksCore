@@ -1,0 +1,21 @@
+.color_picker {
+    position:relative;
+    cursor: pointer;
+}
+
+.color_picker_square {
+    width: 40px;
+    height: 40px;
+    background-color: grey;
+    border: 1px #d3d3d3 solid;
+}
+
+.color_picker_chooser {
+    position: absolute;
+    z-index: 5;
+    right:0px;
+    display: none;
+    padding: 10px;
+    background-color: white;
+    border: 1px #d3d3d3 solid;
+}

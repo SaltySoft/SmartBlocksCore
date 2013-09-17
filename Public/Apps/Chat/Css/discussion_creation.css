@@ -1,0 +1,106 @@
+.k_chat_discussion_creation {
+    position: absolute;
+    padding: 20px;
+    background-color: white;
+    top: 60px;
+    width: 400px;
+}
+
+.k_chat_discussion_creation .form_field {
+    clear: both;
+    margin-top: 15px;
+}
+
+.k_chat_dc_users_choice
+{
+    margin-top: 15px;
+    border: 1px solid #cccccc;
+    padding: 10px 10px 10px 10px;
+    text-align: center;
+}
+
+.k_chat_discussion_creation .form_field input {
+    float: right;
+}
+
+.k_chat_dc_user_search_result {
+    height: 200px;
+    overflow: auto;
+}
+
+.k_chat_dc_user_selection {
+    height: 200px;
+    overflow: auto;
+}
+
+.k_chat_dc_user_selection ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.k_chat_dc_user_selection li {
+    list-style: none;
+}
+
+.k_chat_dc_user_search_result ul, .k_chat_dc_user_search_result li {
+    padding: 0px;
+    margin: 0px;
+}
+
+.k_chat_dc_user_search_result a {
+    line-height: 25px;
+    height: 25px;
+    background-color: #f0f3f7;
+    display: block;
+    color: black;
+    padding: 5px;
+    float: left;
+    width: 123px;
+    text-align: center;
+    border: 1px solid #aaaaaa;
+    margin: 5px 5px 5px 5px;
+    text-decoration: none;
+    border-radius: 5px;
+
+    /* Firefox */
+    -moz-transition: all 100ms ease-in;
+    /* WebKit */
+    -webkit-transition: all 100ms ease-in;
+    /* Opera */
+    -o-transition: all 100ms ease-in;
+    /* Standard */
+    transition: all 100ms ease-in;
+}
+
+.k_chat_dc_user_search_result a:hover {
+    background-color: rgba(110, 144, 254, 0.4);
+    color: white;
+
+    /* Firefox */
+    -moz-transition: all 100ms ease-in;
+    /* WebKit */
+    -webkit-transition: all 100ms ease-in;
+    /* Opera */
+    -o-transition: all 100ms ease-in;
+    /* Standard */
+    transition: all 100ms ease-in;
+}
+
+.k_chat_dc_users_choice li {
+    float: left;
+    width: 123px;
+    background-color: #f0f3f7;
+    height: 25px;
+    padding: 5px;
+    color: black;
+    text-align: center;
+    border: 1px solid #aaaaaa;
+    border-radius: 5px;
+    margin: 5px 5px 5px 5px;
+}
+
+.remove_item_button
+{
+    margin-left: 10px;
+    margin-top: 25px;
+}

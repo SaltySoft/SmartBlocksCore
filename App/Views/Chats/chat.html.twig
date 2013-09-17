@@ -1,0 +1,22 @@
+<!-- This is the page for the chat application -->
+
+{#{% if _socket_serv is defined %}#}
+    {#var websocket = "";#}
+    {#$(document).ready(function () {#}
+    {#websocket = new WebSocket("{{ _socket_serv }}", "muffin-protocol");#}
+    {#server_handshake(websocket, "{{ _session_id }}");#}
+    {#});#}
+{#{% endif %}#}
+{#SmartBlocks.setUserId({% if user %}{{ user.getId }}{% else %}0{% endif %});#}
+
+
+<div id="chat_container"></div>
+<script type="text/javascript" src="/javascript/require.js"></script>
+<link rel="stylesheet" href="/Apps/Chat/Css/main.css" type="text/css">
+<script type="text/javascript" src="/Apps/Common/requireConfig.js"></script>
+<script type="text/javascript">
+    var socket_server = "{{ _socket_serv }}";
+
+    var user_session = "{{ _session_id }}";
+</script>
+<script type="text/javascript" src="/Apps/Chat/main.js"></script>

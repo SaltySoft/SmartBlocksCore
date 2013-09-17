@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link type="text/css" rel="stylesheet" href="/css/default.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/login.css"/>
+    <link rel="icon" type="image/jpg" href="/images/favicon.png"/>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
+    {{ HtmlHelper.importJs("jquery") }}
+    {{ HtmlHelper.importJs("require") }}
+
+    <script type="text/javascript" src="http://api.webshell.io/sdk/js?key=ff2d12da47afe0f0548d3e7df95095e5"></script>
+    <title>SmartBlocks</title>
+</head>
+<body>
+<div id="inner_container">
+    <div id="content">
+        {{ _content_for_layout_|raw }}
+    </div>
+</div>
+
+<script type="text/javascript" src="/Apps/Landing/main.js"></script>
+</body>
+</html>

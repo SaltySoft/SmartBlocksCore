@@ -1,0 +1,115 @@
+<!--
+/**
+ * Copyright (C) 2013 Antoine Jackson
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+-->
+
+<style type="text/css">
+    #presentation_box
+    {
+        width: 500px;
+        margin: auto;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .right
+    {
+        padding: 10px;
+        background-color: rgba(0, 207, 0, 0.3);
+        border: 2px #006500 solid;
+        margin-bottom: 2px;
+        border-radius: 3px;
+        box-shadow: 0px 5px 10px #aaaaaa;
+        margin: 20px;
+    }
+
+    .wrong
+    {
+        padding: 10px;
+
+        background-color: rgba(255, 0, 0, 0.3);
+        border: 2px #c64439 solid;
+        box-shadow: 0px 5px 10px #aaaaaa;
+        margin-bottom: 2px;
+        border-radius: 3px;
+        margin: 20px;
+    }
+
+    .mid_wrong
+    {
+        padding: 10px;
+
+        background-color: rgba(255, 160, 55, 0.29);
+        border: 2px #c68634 solid;
+        box-shadow: 0px 5px 10px #aaaaaa;
+        margin-bottom: 2px;
+        border-radius: 3px;
+        margin: 20px;
+    }
+
+    .info
+    {
+        padding: 10px;
+
+        background-color: rgba(0, 74, 250, 0.27);
+        border: 2px #046dc6 solid;
+        box-shadow: 0px 5px 10px #aaaaaa;
+        margin-bottom: 2px;
+        border-radius: 3px;
+        margin: 20px;
+    }
+</style>
+
+<div id="config_checks">
+    <h3>Configuration checks</h3>
+    {% if database_status %}
+    <div class="right">
+        <img src="/images/icons/tick.png" /> The database is set correctly
+    </div>
+    {% else %}
+    <div class="wrong">
+        <b><img src="/images/icons/delete.png" /> The database is not set correctly.</b><br/>
+        Verify that you created the database in phpMyAdmin and that its information
+        is correctly set in the <i>/Config/database.php</i> file. Then run the command
+        <i>doctrine orm:schema-tool:update --force</i>
+        in the muffin console.
+    </div>
+    {% endif %}
+    {% if apc_set %}
+    <div class="right">
+        <img src="/images/icons/tick.png" /> Apc is installed
+    </div>
+    {% else %}
+    <div class="mid_wrong">
+        <b><img src="/images/icons/plugin_error.png" /> Apc is not installed.</b><br/>
+        Apc is not compulsory but will
+        accelerate the execution a bit.
+    </div>
+    {% endif %}
+    <div class="info">
+        <img src="/images/icons/information.png" /> <b>Add the php folder to your path</b><br/>
+        If it's not already the done, you should add the folder where your PHP is installed to your
+        system PATH. Otherwise, command line won't work.
+    </div>
+</div>

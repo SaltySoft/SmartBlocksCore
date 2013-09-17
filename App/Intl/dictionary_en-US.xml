@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<dictionary language="en_US">
+    <keyword value="greetings">
+        Hello
+    </keyword>
+    <keyword value="afw_pres">
+        A simple framework that allows you to
+        create MVC structures website, easily, and fast.
+    </keyword>
+    <keyword value="home_mvc_pres">
+        Save time by being clear with what you're doing.
+    </keyword>
+</dictionary>

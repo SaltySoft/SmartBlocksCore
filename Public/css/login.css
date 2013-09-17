@@ -1,0 +1,53 @@
+body {
+    background-color: rgb(221, 221, 221);
+}
+
+.block {
+    width: 400px;
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc;
+    background-color: ghostwhite;
+}
+
+.block .title {
+    font-size: 1.2em;
+    padding: 10px;
+    margin: 0;
+    top: -1px;
+    left: -1px;
+    position: relative;
+    text-align: center;
+}
+
+form {
+    width: 236px;
+    margin: auto !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+}
+
+form input {
+    float: right;
+}
+
+.form_line {
+    margin-top: 15px;
+}
+
+#title {
+    font-style: italic;
+    padding-top: 7px;
+    margin-left: 30px;
+    color: #ffffff;
+}
+
+.logo {
+    text-align: center;
+}
+
+input[type="submit"] {
+    margin: 0;
+}

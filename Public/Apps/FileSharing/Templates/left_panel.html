@@ -1,0 +1,11 @@
+<div>
+    <a class="k_fs_shared_folders_item" href="javascript:void(0);" data-id="0">
+        Home folder
+    </a>
+    Shared with me :
+    <% _.each(folders, function (folder) { %>
+    <a class="k_fs_shared_folders_item" href="javascript:void(0);" data-id="<%= folder.get('id') %>">
+        <%= folder.get('name') %> (created by <%= folder.get('owner').username %>)
+    </a>
+    <% }); %>
+</div>

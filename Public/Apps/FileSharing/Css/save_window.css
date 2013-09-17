@@ -1,0 +1,68 @@
+.k_fs_save_window_container {
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+    background-color: white;
+    border: 1px #d3d3d3 solid;
+    width: -moz-fit-content;
+    width: -webkit-fit-content;
+    width: fit-content;
+
+}
+
+.k_fs_save_window .browser {
+    height: 360px;
+    width: 460px;
+    overflow-y: scroll;
+    background-color: #ededed;
+    padding: 20px;
+}
+
+.k_fs_save_window .browser_control {
+    height: 40px;
+}
+
+.k_fs_save_window .address {
+    height: 14px;
+    border: 1px #d3d3d3 solid;
+    background-color: white;
+    padding: 4px;
+    font-weight: bold;
+    margin-left: 50px;
+    position: relative;
+    top: 5px;
+}
+
+
+
+.k_fs_save_window .save_window_controls {
+    position: relative;
+}
+
+.k_fs_save_window .save_window_controls input {
+    position: absolute;
+    left: 0px;
+    right: 97px;
+    top: 0px;
+    bottom: 0px;
+    height: auto;
+}
+
+
+.k_fs_save_window .save_window_controls button {
+    float: right;
+}
+
+.k_fs_save_window .browser_button {
+    float: left;
+}
+
+.k_fs_save_window .error_messages {
+    padding: 5px;
+    margin-top: 5px;
+    background-color: rgba(255, 160, 122, 0.75);
+    border: 2px rgba(175, 0, 8, 0.75) solid;
+    display: none;
+    color: rgba(175, 0, 8, 0.75);
+    font-weight: bold;
+}

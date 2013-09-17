@@ -1,0 +1,5 @@
+<ul class="objects_selection <%= type %>_selection">
+    <% _.each(selection, function (selected) { %>
+    <li class="object_selected <%= type %>_selected"><%= selected.get(field) %><a href="javascript:void(0);" class="remove_from_selection" data-id="<%= selected.get('id') %>"><img src="/images/icons/cross.png"></a></li>
+    <% }); %>
+</ul>

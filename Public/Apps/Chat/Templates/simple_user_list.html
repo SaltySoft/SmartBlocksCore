@@ -1,0 +1,7 @@
+<ul>
+    <% _.each(users, function (user) { %>
+    <li><%= user.get('username') %> <a class="remove_item_button" href="javascript:void(0);" data-user_id="<%= user.get('id') %>">
+        <img src="/images/icons/cross.png" />
+    </a></li>
+    <% }); %>
+</ul>
