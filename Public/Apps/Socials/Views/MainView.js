@@ -13,42 +13,24 @@ define([
         initialize: function () {
 
         },
-        init: function (SmartBlocks) {
+        init: function (app) {
             var base = this;
             base.SmartBlocks = SmartBlocks;
+            base.app = app;
             base.render();
-
-            var Router = Backbone.Router.extend({
-                routes: {
-                    "me": "me",
-                    "profile/:id": "profile"
-                },
-                me: function () {
-                    base.me();
-                    console.log("AP");
-                },
-                profile: function (id) {
-                    base.profile(id);
-                }
-            });
-
-            var app_router = new Router();
-            Backbone.history.start();
-
-
         },
         render: function () {
             var base = this;
             var template = _.template(MainViewTemplate, {});
 
             base.$el.html(template);
+            base.me();
         },
         me: function () {
             var base = this;
-
             var me_view = new MeView();
-            me_view.init(base.SmartBlocks);
             base.$el.find(".sub_app_holder").html(me_view.$el);
+            me_view.init();
         },
         profile: function (id) {
             var base = this;

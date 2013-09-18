@@ -42,7 +42,6 @@ $(document).ready(function () {
                 },
                 me: function () {
                     base.me();
-                    console.log("AP");
                 },
                 profile: function (id) {
                     base.profile(id);
@@ -53,10 +52,22 @@ $(document).ready(function () {
                 render: function (view) {
                     var base = this;
                     $("#content").html(view.$el);
+                },
+                setApp: function (app) {
+                    var base = this;
+                    SmartBlocks.current_app = app;
+                    app.launch();
+                },
+                entry: function () {
+                    SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
                 }
             };
 
-
+            window.Config = {};
+            window.Config.entry_app = {
+                block: 'kernel',
+                app: 'app_organizer'
+            };
 
             SmartBlocks.router = new SmartBlocks.basics.Router();
             Backbone.history.start();
@@ -64,23 +75,10 @@ $(document).ready(function () {
             SmartBlocks.basics.init_solution();
 
             SmartBlocks.Data.blocks = new SmartBlocks.Collections.Blocks();
-
-            SmartBlocks.Data.blocks.fetch({
-                success: function () {
-                    var blocks =SmartBlocks.Data.blocks.models;
-
-                    for (var k in blocks) {
-                        var block = blocks[k];
-                        var apps = block.get("apps");
-                        console.log(apps);
-                        for (var j in apps) {
-                            var app = apps[j];
-                            if (app.get("entry_point")) {
-                                app.launch();
-                            }
-                        }
-
-                    }
+            SmartBlocks.Data.apps = new SmartBlocks.Collections.Applications();
+            $(document).keyup(function (e) {
+                if (e.keyCode == 27) {
+                    SmartBlocks.current_app.quit();
                 }
             });
 
@@ -92,6 +90,30 @@ $(document).ready(function () {
 
                 SmartBlocks.current_user = current_user;
                 UserRequester.initialize(SmartBlocks.basics);
+                SmartBlocks.Data.apps.fetch({
+                    success: function () {
+                        SmartBlocks.Data.blocks.fetch({
+                            success: function () {
+                                var block = SmartBlocks.Data.blocks.where({
+                                    token: Config.entry_app.block
+                                })[0];
+                                if (block) {
+                                    console.log("entry block", block);
+                                    var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
+                                    var app = apps.where({
+                                        token: Config.entry_app.app
+                                    })[0];
+                                    if (app) {
+                                        app = SmartBlocks.Data.apps.get(app.get('id'));
+                                        console.log("entry app", app);
+                                        SmartBlocks.entry_app = app;
+                                        SmartBlocks.Methods.setApp(app);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
 
 
 

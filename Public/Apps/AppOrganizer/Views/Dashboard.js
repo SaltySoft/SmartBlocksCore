@@ -20,17 +20,10 @@ define([
             var base = this;
             this.AppEvents = AppEvents;
 
-            base.blocks_collection = new BlocksCollection();
-            if (amplify.store("blocks_collection") === undefined) {
-                base.blocks_collection.fetch({
-                    data: {
-
-                    },
-                    success: function () {
-                        base.render();
-                        amplify.store("blocks_collection", base.blocks_collection)
-                    }
-                });
+            base.blocks_collection = SmartBlocks.Data.blocks;
+            if (amplify.store("blocks_collection") === undefined || true) {
+                base.render();
+                amplify.store("blocks_collection", base.blocks_collection)
             } else {
                 base.blocks_collection = new BlocksCollection(amplify.store("blocks_collection"));
                 base.blocks_collection.reparse();
@@ -83,6 +76,19 @@ define([
             });
             base.$el.find(".nameLink").click(function (e) {
                 e.stopPropagation();
+            });
+
+            base.$el.delegate(".dashboard_app", "click", function () {
+                var elt = $(this);
+
+                if (elt.attr("data-appid")) {
+
+                    var app = SmartBlocks.Data.apps.get(elt.attr("data-appid"));
+
+                    if (app) {
+                        SmartBlocks.Methods.setApp(app);
+                    }
+                }
             });
         }
     });

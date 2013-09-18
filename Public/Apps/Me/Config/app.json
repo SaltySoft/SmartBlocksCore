@@ -3,6 +3,7 @@
     "token":"socials_me",
     "description":"In this app, you can edit your profile and contacts.",
     "link":"#/socials/me",
-    "logo_url":"/Organization/Apps/Calendar/Resources/logo.png",
-    "block_token":"kernel"
+    "logo_url":"/images/icons/user.png",
+    "block_token":"kernel",
+    "entry_point": "Apps/Socials/Views/MainView"
 }

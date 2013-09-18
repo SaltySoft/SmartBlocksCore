@@ -3,8 +3,10 @@ define([
     'backbone'
 ], function (_, Backbone) {
     var Application = Backbone.Model.extend({
-        defaults:{
-
+        defaults: {
+        },
+        initialize: function () {
+            var base = this;
         },
         launch: function () {
             var base = this;
@@ -12,10 +14,13 @@ define([
                 require([base.get("entry_point")], function (View) {
                     var view = new View();
                     SmartBlocks.Methods.render(view);
-
-                    view.init();
-                })
+                    view.init(base);
+                });
             }
+        },
+        quit: function () {
+            var base = this;
+            SmartBlocks.Methods.entry();
         }
     });
 

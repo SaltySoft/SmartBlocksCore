@@ -15,9 +15,10 @@ define([
         initialize: function () {
 
         },
-        init: function (SmartBlocks) {
+        init: function (app) {
             var base = this;
             base.SmartBlocks = SmartBlocks;
+            base.app = app;
 
             base.user_search_res = new UsersCollection();
 
@@ -77,9 +78,11 @@ define([
                 console.log(message);
                 if (message.app == "socials") {
                     if (message.action == "contact_change") {
-                        base.fetchUser(function () {
-                            base.renderContacts();
-                        });
+//                        base.fetchUser(function () {
+//                            base.renderContacts();
+//                        });
+                        base.user = SmartBlocks.basics.current_user;
+                        base.renderContacts();
                         base.SmartBlocks.show_message(message.message);
                     }
                     if (message.action == "contact_notif") {
