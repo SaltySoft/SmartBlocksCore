@@ -4,7 +4,7 @@ define([
     'backbone',
     'Apps/UserRequester/Views/Notification'
 ], function ($, _, Backbone, NotificationView) {
-    var initialize = function (SmartBlocks) {
+    var initialize = function () {
         var notifications = [];
 
         SmartBlocks.events.on("ws_notification", function (message) {

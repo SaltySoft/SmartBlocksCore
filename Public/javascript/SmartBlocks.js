@@ -2,8 +2,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
+
+    'Apps/Common/Models/Block',
+    'Apps/Common/Models/Application',
+    'Apps/Common/Collections/Blocks',
+    'Apps/Common/Collections/Applications',
     'jqueryui'
-], function ($, _, Backbone) {
+], function ($, _, Backbone, Block, Application, Blocks, Applications) {
 
     var func_set = {
         loadings: [],
@@ -51,6 +56,17 @@ define([
                     day_names:['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
                 }
             };
+
+            window.SmartBlocks.Models = {};
+            window.SmartBlocks.Collections = {};
+            window.SmartBlocks.Blocks = {};
+
+            window.SmartBlocks.Models.Block = Block;
+            window.SmartBlocks.Models.Application = Application;
+            window.SmartBlocks.Collections.Blocks = Blocks;
+            window.SmartBlocks.Collections.Applications = Applications
+
+            window.SmartBlocks.Data = {};
         },
         show_message: function (message) {
             clearTimeout(this.timer);

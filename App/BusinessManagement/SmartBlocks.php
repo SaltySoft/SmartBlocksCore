@@ -116,6 +116,8 @@ class SmartBlocks
         $app->setDescription($data["description"]);
         $app->setLink($data["link"]);
         $app->setAdminApp(isset($data["admin"]) && $data["admin"]);
+        $app->setEntryPoint(isset($data["entry_point"]) ? $data["entry_point"] : null);
+        $app->setStyle(isset($data["style"]) ? $data["style"] : null);
         if (isset($data["logo_url"]))
             $app->setLogoUrl($data["logo_url"]);
 

@@ -2,7 +2,7 @@
     "name":"My page",
     "token":"socials_me",
     "description":"In this app, you can edit your profile and contacts.",
-    "link":"/Users/socials#me",
+    "link":"#/socials/me",
     "logo_url":"/Organization/Apps/Calendar/Resources/logo.png",
     "block_token":"kernel"
 }

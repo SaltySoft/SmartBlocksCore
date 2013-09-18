@@ -50,6 +50,16 @@ class Application extends Model
      */
     private $admin_app;
 
+    /**
+     * @Column(type="string", nullable=true)
+     */
+    private $entry_point;
+
+    /**
+     * @Column(type="string", nullable=true)
+     */
+    private $style;
+
     public function __construct()
     {
         $this->name = "";
@@ -112,6 +122,28 @@ class Application extends Model
         return $this->block;
     }
 
+    public function setEntryPoint($entry_point)
+    {
+        $this->entry_point = $entry_point;
+    }
+
+    public function getEntryPoint()
+    {
+        return $this->entry_point;
+    }
+
+    public function setStyle($style)
+    {
+        $this->style = $style;
+    }
+
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+
+
     public function toArray()
     {
         $appArray = array();
@@ -122,6 +154,8 @@ class Application extends Model
         $appArray["link"] = $this->link;
         $appArray["logo_url"] = $this->logo_url;
         $appArray["admin"] = $this->getAdminApp();
+        $appArray["entry_point"] = $this->getEntryPoint();
+        $appArray["style"] = $this->getStyle();
 
         return $appArray;
     }
