@@ -5,3 +5,4 @@ Config/database.php
 Data/Schemas/*
 Data/User_files/*
 Public/node_modules/*
+Plugins/*
