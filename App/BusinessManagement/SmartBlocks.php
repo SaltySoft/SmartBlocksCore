@@ -48,7 +48,7 @@ class SmartBlocks
     /***************************** public functions ****************************/
     /********************************** END ************************************/
 
-    private  static function getPluginsDirectoriesName()
+    private static function getPluginsDirectoriesName()
     {
         $plugins_directories_name = array();
         if (file_exists(ROOT . DS . 'Plugins') && $handle = opendir(ROOT . DS . 'Plugins'))
@@ -68,13 +68,18 @@ class SmartBlocks
 
     private static function createBlockWith($data, $desc_location = null)
     {
+
+        echo $data;
         $data = json_decode($data, true);
+        print_r($data);
+        echo $data["name"];
         $blocks = \ApplicationBlock::where(array("token" => $data["token"]));
         if (count($blocks) < 1)
             $block = new \ApplicationBlock();
         else
             $block = $blocks[0];
         $block->setName($data["name"]);
+
         $block->setToken($data["token"]);
         $block->setDescription($data["description"]);
         if ($desc_location != null)
@@ -86,6 +91,8 @@ class SmartBlocks
         if (isset($data["color"]))
             $block->setColor($data["color"]);
         $block->save();
+
+
     }
 
     private static function loadBlockOf($blockPath)
@@ -95,13 +102,8 @@ class SmartBlocks
             if (file_exists($blockPath . DS . "Config" . DS . "block.json"))
             {
                 $data = file_get_contents($blockPath . DS . "Config" . DS . "block.json");
-                try
-                {
-                    self::createBlockWith($data, $blockPath . DS . "Config" . DS . "block.json");
-                } catch (\Exception $e)
-                {
-                    \MuffinApplication::addError($e->getMessage());
-                }
+
+                self::createBlockWith($data, $blockPath . DS . "Config" . DS . "block.json");
             }
         }
     }

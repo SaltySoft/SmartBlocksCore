@@ -35,17 +35,41 @@ $(document).ready(function () {
                 };
             }
 
+            SmartBlocks.Url = {
+                params: []
+            };
+
             SmartBlocks.basics.Router = Backbone.Router.extend({
                 routes: {
+                    "": "entry",
+                    ":blockname/:appname": "launch_app",
+                    ":blockname/:appname/:params": "launch_app"
+                },
+                entry: function () {
+                    SmartBlocks.Methods.entry();
+                },
+                launch_app: function (blockname, appname, params) {
+                    SmartBlocks.Url.params = params ? params.split("&") : [];
 
-                },
-                me: function () {
-                    base.me();
-                },
-                profile: function (id) {
-                    base.profile(id);
+                    var block = SmartBlocks.Data.blocks.where({
+                        token: blockname
+                    })[0];
+                    if (block) {
+                        var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
+                        var app = apps.where({
+                            token: appname
+                        })[0];
+                        if (app) {
+                            app = SmartBlocks.Data.apps.get(app.get('id'));
+                            SmartBlocks.Methods.setApp(app);
+                        }
+                    }
                 }
             });
+
+            SmartBlocks.router = new SmartBlocks.basics.Router();
+
+
 
 
 
@@ -60,6 +84,7 @@ $(document).ready(function () {
                     app.launch();
                 },
                 entry: function () {
+
                     SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
                 },
                 types: {
@@ -69,7 +94,6 @@ $(document).ready(function () {
                 addType: function (type, block) {
 
                     require([type.model_location, type.collection_location], function (model, collection) {
-                        console.log(type);
                         SmartBlocks.Blocks[block.get("name")].Models[type.model_name] = model;
                         SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
                         SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
@@ -78,7 +102,6 @@ $(document).ready(function () {
                                 SmartBlocks.loading_screen.setLoad(SmartBlocks.Methods.processed + 1);
                                 if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                     //Done loading types
-                                    console.log(SmartBlocks);
                                     var block = SmartBlocks.Data.blocks.where({
                                         token: Config.entry_app.block
                                     })[0];
@@ -88,10 +111,10 @@ $(document).ready(function () {
                                             token: Config.entry_app.app
                                         })[0];
                                         if (app) {
-                                            app = SmartBlocks.Data.apps.get(app.get('id'));
-                                            console.log("entry app", app);
+                                            app = SmartBlocks.Data.apps.get(app.get('id'))
                                             SmartBlocks.entry_app = app;
                                             SmartBlocks.Methods.setApp(app);
+                                            Backbone.history.start();
                                         }
                                     }
                                 }
@@ -107,8 +130,7 @@ $(document).ready(function () {
                 app: 'app_organizer'
             };
 
-            SmartBlocks.router = new SmartBlocks.basics.Router();
-            Backbone.history.start();
+
 
             SmartBlocks.basics.init_solution();
 
@@ -162,6 +184,7 @@ $(document).ready(function () {
                                         SmartBlocks.Methods.addType(type, block);
                                     }
                                 }
+
                             }
                         });
                     }

@@ -10,9 +10,12 @@ define([
         },
         launch: function () {
             var base = this;
+            console.log("LAUNCHING");
             if (base.get("entry_point")) {
+
                 require([base.get("entry_point")], function (View) {
                     var view = new View();
+                    console.log(view.el);
                     SmartBlocks.Methods.render(view);
                     view.init(base);
                 });

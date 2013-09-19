@@ -78,18 +78,6 @@ define([
                 e.stopPropagation();
             });
 
-            base.$el.delegate(".dashboard_app", "click", function () {
-                var elt = $(this);
-
-                if (elt.attr("data-appid")) {
-
-                    var app = SmartBlocks.Data.apps.get(elt.attr("data-appid"));
-
-                    if (app) {
-                        SmartBlocks.Methods.setApp(app);
-                    }
-                }
-            });
         }
     });
 
