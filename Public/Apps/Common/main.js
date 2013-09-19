@@ -5,7 +5,7 @@ requirejs.config({
 });
 
 /*Fill with default apps (file sharing and chat)*/
-var apps = ["underscore", "backbone", "SmartBlocks", "Apps/Chat/app", "Apps/FileSharing/app", "Apps/NotificationsCenter/app", "UserModel", "UsersCollection", "Apps/UserRequester/app", "Externals"];
+var apps = ["underscore", "backbone", "SmartBlocks", "Apps/Chat/app", "Apps/FileSharing/app", "Apps/NotificationsCenter/app", "UserModel", "UsersCollection", "Apps/UserRequester/app", "Externals", "LoadingScreen"];
 
 if (app !== undefined) {
     apps.push(app);
@@ -16,7 +16,7 @@ $(document).ready(function () {
     //Uncomment next line to disable default context menu everywhere in SmartBlocks
 //    $("body").attr("oncontextmenu", "return false");
     requirejs(apps,
-        function (/*defaults, */_, Backbone, sb_basics, ChatApp, FileSharingApp, NotifCenterApp, User, UsersCollection, UserRequester, Externals, App) {
+        function (/*defaults, */_, Backbone, sb_basics, ChatApp, FileSharingApp, NotifCenterApp, User, UsersCollection, UserRequester, Externals, LoadingScreen, App) {
 
             window.SmartBlocks = {};
             SmartBlocks.basics = sb_basics;
@@ -47,6 +47,8 @@ $(document).ready(function () {
                 }
             });
 
+
+
             SmartBlocks.Methods = {
                 render: function (view) {
                     var base = this;
@@ -59,6 +61,43 @@ $(document).ready(function () {
                 },
                 entry: function () {
                     SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
+                },
+                types: {
+                    count: 0,
+                    processed: 0
+                },
+                addType: function (type, block) {
+
+                    require([type.model_location, type.collection_location], function (model, collection) {
+                        console.log(type);
+                        SmartBlocks.Blocks[block.get("name")].Models[type.model_name] = model;
+                        SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
+                        SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
+                        SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
+                            success: function () {
+                                SmartBlocks.loading_screen.setLoad(SmartBlocks.Methods.processed + 1);
+                                if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
+                                    //Done loading types
+                                    console.log(SmartBlocks);
+                                    var block = SmartBlocks.Data.blocks.where({
+                                        token: Config.entry_app.block
+                                    })[0];
+                                    if (block) {
+                                        var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
+                                        var app = apps.where({
+                                            token: Config.entry_app.app
+                                        })[0];
+                                        if (app) {
+                                            app = SmartBlocks.Data.apps.get(app.get('id'));
+                                            console.log("entry app", app);
+                                            SmartBlocks.entry_app = app;
+                                            SmartBlocks.Methods.setApp(app);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
                 }
             };
 
@@ -81,24 +120,34 @@ $(document).ready(function () {
                 }
             });
 
+            SmartBlocks.loading_screen = new LoadingScreen();
+            SmartBlocks.Methods.render(SmartBlocks.loading_screen);
+            SmartBlocks.loading_screen.init();
+
             User.getCurrent(function (current_user) {
                 SmartBlocks.basics.connected_users = new UsersCollection();
 
                 var timers = [];
                 SmartBlocks.current_user = current_user;
                 UserRequester.initialize(SmartBlocks.basics);
+
+
+
+                SmartBlocks.loading_screen.setText("Loading data");
+                SmartBlocks.loading_screen.setLoad(0);
                 SmartBlocks.Data.apps.fetch({
                     success: function () {
                         SmartBlocks.Data.blocks.fetch({
                             success: function () {
                                 var blocks = SmartBlocks.Data.blocks;
-                                var type_count = 0;
+                                SmartBlocks.Methods.count = 0;
                                 for (var k in blocks.models) {
                                     var block = blocks.models[k];
                                     var types = block.get("types");
-                                    type_count += types != null ? types.length : 0;
+                                    SmartBlocks.Methods.count += types != null ? types.length : 0;
                                 }
-                                var processed_types = 0;
+                                SmartBlocks.loading_screen.setMax(SmartBlocks.Methods.count);
+                                SmartBlocks.Methods.processed = 0;
                                 for (var k in blocks.models) {
                                     var block = blocks.models[k];
                                     var types = block.get("types");
@@ -108,46 +157,11 @@ $(document).ready(function () {
                                         Collections: {},
                                         Data: {}
                                     };
-
                                     for (var t in types) {
                                         var type = types[t];
-                                        require([type.model_location, type.collection_location], function (model, collection) {
-                                            SmartBlocks.Blocks[block.get("name")].Models[type.model_name] = model;
-                                            SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
-                                            SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
-                                            SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
-                                                success: function () {
-
-                                                    if (++processed_types >= type_count) {
-
-                                                        console.log(SmartBlocks);
-                                                        //Done loading types
-                                                        var block = SmartBlocks.Data.blocks.where({
-                                                            token: Config.entry_app.block
-                                                        })[0];
-                                                        if (block) {
-                                                            console.log("entry block", block);
-                                                            var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
-                                                            var app = apps.where({
-                                                                token: Config.entry_app.app
-                                                            })[0];
-                                                            if (app) {
-                                                                app = SmartBlocks.Data.apps.get(app.get('id'));
-                                                                console.log("entry app", app);
-                                                                SmartBlocks.entry_app = app;
-                                                                SmartBlocks.Methods.setApp(app);
-                                                            }
-                                                        }
-                                                    }
-
-                                                }
-                                            });
-
-                                        });
+                                        SmartBlocks.Methods.addType(type, block);
                                     }
                                 }
-
-
                             }
                         });
                     }
