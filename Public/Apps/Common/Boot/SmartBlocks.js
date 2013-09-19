@@ -35,29 +35,27 @@ define([
             SmartBlocks.basics.Router = Backbone.Router.extend({
                 routes: {
                     "": "entry",
-                    ":blockname/:appname": "launch_app",
-                    ":blockname/:appname/:params": "launch_app"
+                    ":appname": "launch_app",
+                    ":appname/:params": "launch_app"
+                },
+                initialize: function () {
+                    this.route(/^([a-zA-Z]*?)\/(.*?)$/, "launch_app", this.launch_app);
                 },
                 entry: function () {
                     SmartBlocks.Methods.entry();
                 },
-                launch_app: function (blockname, appname, params) {
-                    SmartBlocks.Url.params = params ? params.split("&") : [];
+                launch_app: function (appname, params) {
 
-                    var block = SmartBlocks.Data.blocks.where({
-                        token: blockname
+                    SmartBlocks.Url.params = params ? params.split("/") : [];
+                    var app = SmartBlocks.Data.apps.where({
+                        token: appname
                     })[0];
-                    if (block) {
-                        var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
-                        var app = apps.where({
-                            token: appname
-                        })[0];
-                        if (app) {
-                            app = SmartBlocks.Data.apps.get(app.get('id'));
-                            SmartBlocks.Methods.setApp(app);
-                        }
+                    if (app && (!SmartBlocks.current_app || SmartBlocks.current_app.get("id") != app.get("id"))) {
+                        app = SmartBlocks.Data.apps.get(app.get('id'));
+                        SmartBlocks.Methods.setApp(app);
                     }
                 }
+
             });
 
             SmartBlocks.router = new SmartBlocks.basics.Router();
@@ -197,6 +195,9 @@ define([
                             if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                 //Done loading types
                                 Backbone.history.start();
+                                $(window).bind("hashchange", function () {
+                                    SmartBlocks.events.trigger("hashchange");
+                                });
                             }
                         }
                     });
