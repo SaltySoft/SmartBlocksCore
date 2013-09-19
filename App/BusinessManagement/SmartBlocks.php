@@ -91,6 +91,29 @@ class SmartBlocks
         if (isset($data["color"]))
             $block->setColor($data["color"]);
         $block->save();
+        if (isset($data["apps"]) && is_array($data["apps"]))
+        {
+            foreach ($data["apps"] as $app_array)
+            {
+                $apps = \Application::where(array("token" => $app_array["token"]));
+                if (count($apps) < 1)
+                    $app = new \Application();
+                else
+                    $app = $apps[0];
+
+                $app->setName($app_array["name"]);
+                $app->setToken($app_array["token"]);
+                $app->setDescription($app_array["description"]);
+                $app->setLink($app_array["link"]);
+                $app->setAdminApp(isset($app_array["admin"]) && $app_array["admin"]);
+                $app->setEntryPoint(isset($app_array["entry_point"]) ? $app_array["entry_point"] : null);
+                $app->setStyle(isset($app_array["style"]) ? $app_array["style"] : null);
+                if (isset($app_array["logo_url"]))
+                    $app->setLogoUrl($app_array["logo_url"]);
+                $app->setBlock($block);
+                $app->save();
+            }
+        }
 
 
     }
@@ -161,7 +184,7 @@ class SmartBlocks
                 $data = file_get_contents($appPath . DS . "Config" . DS . "app.json");
                 try
                 {
-                    self::createAppWith($data);
+//                    self::createAppWith($data);
                 } catch (\Exception $e)
                 {
                     \MuffinApplication::addError($e->getMessage());

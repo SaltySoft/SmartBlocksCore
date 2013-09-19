@@ -3,5 +3,17 @@
     "token": "kernel",
     "description": "This is the kernel app block",
     "color": "#846fb8",
-    "types": null
+    "types": null,
+    "apps": [
+        {
+            "name": "App organizer",
+            "token": "app_organizer",
+            "description": "entry point",
+            "link": "#",
+            "logo_url": "/images/icons/user.png",
+            "block_token": "kernel",
+            "entry_point": "Apps/AppOrganizer/Views/DashBoard",
+            "style": "Apps/AppOrganizer/Css/app_organizer.less"
+        }
+    ]
 }
