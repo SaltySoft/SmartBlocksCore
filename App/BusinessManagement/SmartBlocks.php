@@ -66,7 +66,7 @@ class SmartBlocks
         return $plugins_directories_name;
     }
 
-    private static function createBlockWith($data)
+    private static function createBlockWith($data, $desc_location = null)
     {
         $data = json_decode($data, true);
         $blocks = \ApplicationBlock::where(array("token" => $data["token"]));
@@ -77,6 +77,10 @@ class SmartBlocks
         $block->setName($data["name"]);
         $block->setToken($data["token"]);
         $block->setDescription($data["description"]);
+        if ($desc_location != null)
+        {
+            $block->setDescriptorLocation($desc_location);
+        }
         if (isset($data["logo_url"]))
             $block->setLogoUrl($data["logo_url"]);
         if (isset($data["color"]))
@@ -93,7 +97,7 @@ class SmartBlocks
                 $data = file_get_contents($blockPath . DS . "Config" . DS . "block.json");
                 try
                 {
-                    self::createBlockWith($data);
+                    self::createBlockWith($data, $blockPath . DS . "Config" . DS . "block.json");
                 } catch (\Exception $e)
                 {
                     \MuffinApplication::addError($e->getMessage());

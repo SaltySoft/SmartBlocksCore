@@ -1,7 +1,7 @@
 requirejs.config({
-    baseUrl:'/',
-    paths:sb_paths,
-    shim:sb_shims
+    baseUrl: '/',
+    paths: sb_paths,
+    shim: sb_shims
 });
 
 /*Fill with default apps (file sharing and chat)*/
@@ -10,7 +10,6 @@ var apps = ["underscore", "backbone", "SmartBlocks", "Apps/Chat/app", "Apps/File
 if (app !== undefined) {
     apps.push(app);
 }
-
 
 
 $(document).ready(function () {
@@ -86,55 +85,73 @@ $(document).ready(function () {
                 SmartBlocks.basics.connected_users = new UsersCollection();
 
                 var timers = [];
-
-
                 SmartBlocks.current_user = current_user;
                 UserRequester.initialize(SmartBlocks.basics);
                 SmartBlocks.Data.apps.fetch({
                     success: function () {
                         SmartBlocks.Data.blocks.fetch({
                             success: function () {
-                                var block = SmartBlocks.Data.blocks.where({
-                                    token: Config.entry_app.block
-                                })[0];
-                                if (block) {
-                                    console.log("entry block", block);
-                                    var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
-                                    var app = apps.where({
-                                        token: Config.entry_app.app
-                                    })[0];
-                                    if (app) {
-                                        app = SmartBlocks.Data.apps.get(app.get('id'));
-                                        console.log("entry app", app);
-                                        SmartBlocks.entry_app = app;
-                                        SmartBlocks.Methods.setApp(app);
+                                var blocks = SmartBlocks.Data.blocks;
+                                var type_count = 0;
+                                for (var k in blocks.models) {
+                                    var block = blocks.models[k];
+                                    var types = block.get("types");
+                                    type_count += types != null ? types.length : 0;
+                                }
+                                var processed_types = 0;
+                                for (var k in blocks.models) {
+                                    var block = blocks.models[k];
+                                    var types = block.get("types");
+                                    SmartBlocks.Blocks = {};
+                                    SmartBlocks.Blocks[block.get("name")] = {
+                                        Models: {},
+                                        Collections: {},
+                                        Data: {}
+                                    };
+
+                                    for (var t in types) {
+                                        var type = types[t];
+                                        require([type.model_location, type.collection_location], function (model, collection) {
+                                            SmartBlocks.Blocks[block.get("name")].Models[type.model_name] = model;
+                                            SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
+                                            SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
+                                            SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
+                                                success: function () {
+
+                                                    if (++processed_types >= type_count) {
+
+                                                        console.log(SmartBlocks);
+                                                        //Done loading types
+                                                        var block = SmartBlocks.Data.blocks.where({
+                                                            token: Config.entry_app.block
+                                                        })[0];
+                                                        if (block) {
+                                                            console.log("entry block", block);
+                                                            var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
+                                                            var app = apps.where({
+                                                                token: Config.entry_app.app
+                                                            })[0];
+                                                            if (app) {
+                                                                app = SmartBlocks.Data.apps.get(app.get('id'));
+                                                                console.log("entry app", app);
+                                                                SmartBlocks.entry_app = app;
+                                                                SmartBlocks.Methods.setApp(app);
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                            });
+
+                                        });
                                     }
                                 }
+
+
                             }
                         });
                     }
                 });
-
-
-
-//                if (App) {
-//                    App.initialize(SmartBlocks.basics);
-//                    if (App.sync) {
-//                        var sync_timer = 0;
-////                        sync_timer = setInterval(function () {
-////                            App.sync();
-////                        }, 60000);
-//
-//                        $(document).keyup(function (e) {
-//                            if (e.keyCode == 107) {
-//                                console.log("Syncing");
-//                                App.sync();
-//                                clearInterval(sync_timer);
-//                            }
-//                        });
-//                    }
-//                }
-
 
                 //Hearbeats. If I'm living, my heart beats.
                 SmartBlocks.events.on("ws_notification", function (message) {

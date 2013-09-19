@@ -45,6 +45,11 @@ class ApplicationBlock extends Model
      */
     private $applications;
 
+    /**
+     * @Column(type="string")
+     */
+    private $descriptor_location;
+
     public function __construct()
     {
         $this->name = "";
@@ -112,6 +117,15 @@ class ApplicationBlock extends Model
         return $this->color;
     }
 
+    public function setDescriptorLocation($descriptor_location)
+    {
+        $this->descriptor_location = $descriptor_location;
+    }
+
+    public function getDescriptorLocation()
+    {
+        return $this->descriptor_location;
+    }
 
     public function toArray()
     {
@@ -121,6 +135,13 @@ class ApplicationBlock extends Model
         $appBlockArray["description"] = $this->description;
         $appBlockArray["logo_url"] = $this->logo_url;
         $appBlockArray["color"] = $this->color;
+
+        if ($this->descriptor_location != null)
+        {
+            $descriptor = json_decode(file_get_contents($this->descriptor_location), true);
+            $appBlockArray["types"] = $descriptor["types"];
+        }
+
         $appsArray = array();
 
         foreach ($this->getApplications() as $app)
