@@ -50,8 +50,8 @@ define([
                     var app = SmartBlocks.Data.apps.where({
                         token: appname
                     })[0];
-                    if (app && (!SmartBlocks.current_app || SmartBlocks.current_app.get("id") != app.get("id"))) {
-                        app = SmartBlocks.Data.apps.get(app.get('id'));
+                    if (app && (!SmartBlocks.current_app || SmartBlocks.current_app.get("token") != app.get("token"))) {
+                        app = SmartBlocks.Data.apps.get(app.get('token'));
                         SmartBlocks.Methods.setApp(app);
                     }
                 }
@@ -160,6 +160,7 @@ define([
                 var base = this;
                 SmartBlocks.current_app = app;
                 app.launch();
+
             },
             entry: function () {
                 if (!SmartBlocks.entry_app) {
@@ -171,14 +172,18 @@ define([
                         var app = apps.where({
                             token: SmartBlocks.Config.entry_app.app
                         })[0];
+
                         if (app) {
-                            app = SmartBlocks.Data.apps.get(app.get('id'))
+                            app = SmartBlocks.Data.apps.get(app.get('token'));
                             SmartBlocks.entry_app = app;
+                            SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
                         }
                     }
+                } else {
+                    SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
                 }
 
-                SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
+
             },
             types: {
                 count: 0,
@@ -198,6 +203,7 @@ define([
                                 $(window).bind("hashchange", function () {
                                     SmartBlocks.events.trigger("hashchange");
                                 });
+
                             }
                         }
                     });

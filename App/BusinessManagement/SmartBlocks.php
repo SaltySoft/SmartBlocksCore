@@ -48,7 +48,7 @@ class SmartBlocks
     /***************************** public functions ****************************/
     /********************************** END ************************************/
 
-    private static function getPluginsDirectoriesName()
+    public static function getPluginsDirectoriesName()
     {
         $plugins_directories_name = array();
         if (file_exists(ROOT . DS . 'Plugins') && $handle = opendir(ROOT . DS . 'Plugins'))
@@ -130,6 +130,34 @@ class SmartBlocks
             }
         }
     }
+
+    public static function loadBlockInformation($block_dir_name, $from_root = false)
+    {
+        $data = null;
+        if (!$from_root)
+            $dir_path = ROOT . DS . "Plugins" . DS . $block_dir_name . DS . "Config";
+        else
+            $dir_path = ROOT . DS . "Config";
+        if (file_exists($dir_path) && $handle = opendir($dir_path))
+        {
+            if (file_exists($dir_path . DS . "block.json"))
+            {
+                $data = file_get_contents($dir_path . DS . "block.json");
+                $data = json_decode($data, true);
+            }
+            else
+            {
+                throw new \Exception('Block information file "block.json" missing in ' . $dir_path . DS . "Config", 404);
+            }
+        }
+        else
+        {
+            throw new \Exception("Block config folder not found in " . $dir_path, 404);
+        }
+
+        return $data;
+    }
+
 
     private static function createAppWith($data)
     {

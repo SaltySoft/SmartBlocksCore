@@ -8,31 +8,6 @@
 require_once(ROOT . DS . "App" . DS . "BusinessManagement" . DS . "SmartBlocks.php");
 class BlocksController extends Controller
 {
-    private function security_check($user = null)
-    {
-        if (!User::logged_in() || !(User::current_user()->is_admin() || User::current_user() == $user))
-        {
-            $this->redirect("/Users/user_error");
-        }
-    }
-
-    private function interface_security_check($user = null)
-    {
-        if (!User::logged_in() || !(User::current_user()->is_admin() || User::current_user() == $user))
-        {
-            $this->redirect("/");
-        }
-    }
-
-    public function configure()
-    {
-        //security_check(User::current_user());
-        if (!User::logged_in() || !User::is_admin())
-            $this->redirect("/");
-        \BusinessManagement\SmartBlocks::loadAllBlocksAndApps();
-        $this->render = false;
-    }
-
     /**
      * Web Service :
      * Get all the Applications Blocks and their respective Applications in an array.
@@ -40,40 +15,18 @@ class BlocksController extends Controller
     public function index()
     {
         $response = array();
-        $kernel = ApplicationBlock::where(array("token" => "kernel"));
-        $blocks[] = $kernel[0];
+        $kernel_info = \BusinessManagement\SmartBlocks::loadBlockInformation("Kernel", true);
+        $response[] = $kernel_info;
 
-        foreach (ApplicationBlock::all() as $block)
+        $directories = \BusinessManagement\SmartBlocks::getPluginsDirectoriesName();
+
+        foreach ($directories as $directory)
         {
-            if ($block->getToken() != "kernel")
-                $blocks[] = $block;
+            $block_info = \BusinessManagement\SmartBlocks::loadBlockInformation($directory);
+            $response[] = $block_info;
         }
-        foreach ($blocks as $block)
-        {
-            $response[] = $block->toArray();
-        }
-        $this->render = false;
-        header("Content-Type: application/json");
-        echo json_encode($response);
+
+        $this->return_json($response);
     }
 
-    public function show($params = array())
-    {
-        $block = ApplicationBlock::find($params['id']);
-        $this->render = false;
-        header("Content-Type: application/json");
-        echo json_encode($block->toArray());
-    }
-
-    public function create()
-    {
-    }
-
-    public function update($params = array())
-    {
-    }
-
-    public function destroy($params = array())
-    {
-    }
 }
