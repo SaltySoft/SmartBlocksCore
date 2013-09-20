@@ -12,12 +12,15 @@ define([
             var base = this;
             var pb_view = new ProgressBarView();
             base.pb_view = pb_view;
+            base.initiated = false;
+            
         },
         init: function (SmartBlocks) {
             var base = this;
             base.SmartBlocks = SmartBlocks;
 
             base.render();
+            base.initiated = true;
         },
         render: function () {
             var base = this;

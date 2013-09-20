@@ -76,9 +76,7 @@ define([
                 }
             });
 
-            SmartBlocks.loading_screen = new LoadingScreen();
-            SmartBlocks.Methods.render(SmartBlocks.loading_screen);
-            SmartBlocks.loading_screen.init();
+            SmartBlocks.Methods.startMainLoading("Loading apps", 8);
 
             User.getCurrent(function (current_user) {
                 SmartBlocks.basics.connected_users = new UsersCollection();
@@ -86,17 +84,16 @@ define([
                 var timers = [];
                 SmartBlocks.current_user = current_user;
                 UserRequester.initialize(SmartBlocks.basics);
-
-
-                SmartBlocks.loading_screen.setText("Loading data");
-                SmartBlocks.loading_screen.setLoad(0);
                 SmartBlocks.Data.apps.fetch({
                     success: function () {
+                        SmartBlocks.Methods.continueMainLoading(1, "Loading blocks");
                         SmartBlocks.Data.blocks.fetch({
                             success: function () {
+                                SmartBlocks.Methods.continueMainLoading(1, "Loading config");
                                 $.ajax({
                                     url: "/Configs/front_end_config",
                                     success: function (data, status) {
+                                        SmartBlocks.Methods.continueMainLoading(1, "Loading data");
                                         SmartBlocks.Config = data;
                                         var blocks = SmartBlocks.Data.blocks;
                                         SmartBlocks.Methods.count = 0;
@@ -105,7 +102,6 @@ define([
                                             var types = block.get("types");
                                             SmartBlocks.Methods.count += types != null ? types.length : 0;
                                         }
-                                        SmartBlocks.loading_screen.setMax(SmartBlocks.Methods.count);
                                         SmartBlocks.Methods.processed = 0;
                                         for (var k in blocks.models) {
                                             var block = blocks.models[k];
@@ -161,6 +157,9 @@ define([
 
 
         },
+        States: {
+            main_loading: false
+        },
         Methods: {
             render: function (view) {
                 var base = this;
@@ -196,8 +195,28 @@ define([
 
 
             },
-            start_loading: function (message, steps) {
-                
+            startMainLoading: function (message, steps) {
+                if (!SmartBlocks.loading_screen) {
+                    SmartBlocks.loading_screen = new LoadingScreen();
+                }
+                if (!SmartBlocks.loading_screen.initiated) {
+                    SmartBlocks.loading_screen.init();
+                }
+                SmartBlocks.loading_screen.setMax(steps);
+                SmartBlocks.loading_screen.setText(message);
+                SmartBlocks.loading_screen.setLoad(1);
+                SmartBlocks.States.main_loading = true;
+
+                SmartBlocks.Methods.render(SmartBlocks.loading_screen);
+            },
+            continueMainLoading: function (step_add, message) {
+                if (message) {
+                    SmartBlocks.loading_screen.setText(message);
+                }
+                SmartBlocks.loading_screen.setLoad(SmartBlocks.loading_screen.pb_view.load + step_add);
+            },
+            stopMainLoading: function () {
+                SmartBlocks.States.main_loading = false;
             },
             types: {
                 count: 0,
@@ -210,7 +229,7 @@ define([
                     SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
                     SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
                         success: function () {
-                            SmartBlocks.loading_screen.setLoad(SmartBlocks.Methods.processed + 1);
+                            SmartBlocks.Methods.continueMainLoading((1  / SmartBlocks.Methods.count) * 5, "Loading data");
                             if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                 //Done loading types
                                 Backbone.history.start();

@@ -16,9 +16,10 @@
     {#<link href="/css/hot-sneaks/jquery-ui-min.css" rel="stylesheet">#}
     <script src="/javascript/jquery.js"></script>
     <script type="text/javascript" src="http://api.webshell.io/sdk/js?key=ff2d12da47afe0f0548d3e7df95095e5"></script>
-    {{ HtmlHelper.importCss("default") }}
+
     <meta name="viewport" content="user-scalable=no, width=device-width,
       initial-scale=0.5, minimum-scale=0.5, maximum-scale=0.5" />
+    <link rel="stylesheet/less" type="text/css" href="/css/default.less" />
     <link rel="stylesheet" type="text/css" href="/css/fullcalendar.css" />
     <link rel="stylesheet/less" type="text/css" href="/Apps/Common/Css/progress_bar.less" />
     <link rel="stylesheet/less" type="text/css" href="/Apps/Common/Css/loading_screen.less" />
@@ -37,44 +38,18 @@
         <a class="menu_button" href="#" title="Home">
             <img src="/images/icons/house.png"/>
         </a>
-        {#<div id="user_log">#}
-            {#{% if user_set %}#}
-                {#Logged in as {{ user.name }} <a href="/Users/logout">Log out</a>#}
-            {#{% else %}#}
-                {#<a href="/Users/login_form">Log in</a> - <a href="/Users/add">Register</a>#}
-            {#{% endif %}#}
-        {#</div>#}
-        {#<a class="menu_button log_button" href="javascript:void(0);" title="Login">#}
-            {#<img src="/images/icons/user.png"/>#}
-        {#</a>#}
         <a class="menu_button" href="/Users/logout" title="Login">
             <img src="/images/icons/door_open.png"/>
         </a>
         <div id="notification_center_container">
 
         </div>
-        <a class="menu_button notif_button" href="javascript:void(0);" title="Notifications">
-            <img src="/images/icons/newspaper.png"/>
-        </a>
-
-        {% if user.is_admin() %}
-            <a class="menu_button" href="/Users/user_management" title="User management">
-                <img src="/images/icons/user_edit.png">
-            </a>
-        {% endif %}
     </div>
     <div id="inner_container">
         <div id="content">
             {{ _content_for_layout_|raw }}
         </div>
     </div>
-    {% if user_set %}
-        {#<div id="file_sharing_button"><p id="file_sharing_text">File Sharing</p></div>#}
-
-        {#<div id="chat_button">#}
-            {#<div id="chat_notif" class="chat_notif"></div>#}
-            {#<p id="chat_text">Chat</p></div>#}
-    {% endif %}
 </div>
 <script type="text/javascript">
 
@@ -88,20 +63,13 @@
 
     {% endif %}
 </script>
-
-
-{#<div id="chat_container"></div>#}
 <div id="file_sharing_container"></div>
-
 <link rel="stylesheet" href="/Apps/Common/Css/text_editor_outer.css" type="text/css"/>
 <link rel="stylesheet" href="/Apps/FileSharing/Css/main.css" type="text/css"/>
 <link rel="stylesheet" href="/Apps/FileSharing/Css/save_window.css" type="text/css"/>
 <link rel="stylesheet" href="/Apps/Chat/Css/main.css" type="text/css"/>
 <link rel="stylesheet" href="/Apps/UserRequester/Css/main.css" type="text/css"/>
-
 <link rel="stylesheet" href="/Apps/Chat/Css/chat.css" type="text/css"/>
-
-
 <link rel="stylesheet" href="/Apps/Chat/Css/discussion_creation.css" type="text/css"/>
 <script type="text/javascript" src="/Apps/Common/requireConfig.js"></script>
 <script type="text/javascript" src="/Apps/Common/main.js"></script>
