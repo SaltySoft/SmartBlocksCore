@@ -51,4 +51,6 @@ define("CACHE_PREFIX", "smartblocks");
 define("NODE_PORT", "10001");
 define("CHUNK_SIZE", 1024*1024);
 
+define("FRONT_END_CONFIG", ROOT . DS . "Config" . DS . "front-end-config.json");
+
 date_default_timezone_set("Europe/Paris");

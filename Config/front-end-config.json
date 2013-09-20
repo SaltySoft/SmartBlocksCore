@@ -1,6 +1,9 @@
 {
     "startup_app": {
         "block": "kernel",
-        "app": "app_organizer"
+        "app": "app_organizer",
+        "url_params": [
+
+        ]
     }
 }

@@ -66,11 +66,6 @@ define([
             SmartBlocks.router = new SmartBlocks.basics.Router();
 
 
-            SmartBlocks.Config = {};
-            SmartBlocks.Config.entry_app = {
-                block: 'kernel',
-                app: 'app_organizer'
-            };
             SmartBlocks.basics.init_solution();
 
             SmartBlocks.Data.blocks = new SmartBlocks.Collections.Blocks();
@@ -99,52 +94,62 @@ define([
                     success: function () {
                         SmartBlocks.Data.blocks.fetch({
                             success: function () {
-                                var blocks = SmartBlocks.Data.blocks;
-                                SmartBlocks.Methods.count = 0;
-                                for (var k in blocks.models) {
-                                    var block = blocks.models[k];
-                                    var types = block.get("types");
-                                    SmartBlocks.Methods.count += types != null ? types.length : 0;
-                                }
-                                SmartBlocks.loading_screen.setMax(SmartBlocks.Methods.count);
-                                SmartBlocks.Methods.processed = 0;
-                                for (var k in blocks.models) {
-                                    var block = blocks.models[k];
-                                    var types = block.get("types");
-                                    SmartBlocks.Blocks = {};
-                                    SmartBlocks.Blocks[block.get("name")] = {
-                                        Models: {},
-                                        Collections: {},
-                                        Data: {}
-                                    };
-                                    for (var t in types) {
-                                        var type = types[t];
-                                        SmartBlocks.Methods.addType(type, block);
+                                $.ajax({
+                                    url: "/Configs/front_end_config",
+                                    success: function (data, status) {
+                                        SmartBlocks.Config = data;
+                                        var blocks = SmartBlocks.Data.blocks;
+                                        SmartBlocks.Methods.count = 0;
+                                        for (var k in blocks.models) {
+                                            var block = blocks.models[k];
+                                            var types = block.get("types");
+                                            SmartBlocks.Methods.count += types != null ? types.length : 0;
+                                        }
+                                        SmartBlocks.loading_screen.setMax(SmartBlocks.Methods.count);
+                                        SmartBlocks.Methods.processed = 0;
+                                        for (var k in blocks.models) {
+                                            var block = blocks.models[k];
+                                            var types = block.get("types");
+                                            SmartBlocks.Blocks = {};
+                                            SmartBlocks.Blocks[block.get("name")] = {
+                                                Models: {},
+                                                Collections: {},
+                                                Data: {}
+                                            };
+                                            for (var t in types) {
+                                                var type = types[t];
+                                                SmartBlocks.Methods.addType(type, block);
+                                            }
+                                        }
+
+                                        //Hearbeats. If I'm living, my heart beats.
+                                        SmartBlocks.events.on("ws_notification", function (message) {
+                                            if (message.app == "heartbeat") {
+                                                SmartBlocks.basics.connected_users.push(message.user);
+                                                clearTimeout(timers[message.user.id]);
+                                                timers[message.user.id] = setTimeout(function () {
+                                                    SmartBlocks.basics.connected_users.remove(message.user);
+                                                }, 10000);
+                                            }
+                                        });
+
+                                        SmartBlocks.basics.connected_users.on("add", function () {
+                                            SmartBlocks.basics.connected_users.trigger("change");
+                                        });
+
+                                        SmartBlocks.basics.connected_users.on("remove", function () {
+                                            SmartBlocks.basics.connected_users.trigger("change");
+                                        });
+
+                                        setInterval(function () {
+                                            //SmartBlocks.heartBeat(current_user);
+                                        }, 5000);
+                                    },
+                                    error: function () {
+
                                     }
-                                }
-
-                                //Hearbeats. If I'm living, my heart beats.
-                                SmartBlocks.events.on("ws_notification", function (message) {
-                                    if (message.app == "heartbeat") {
-                                        SmartBlocks.basics.connected_users.push(message.user);
-                                        clearTimeout(timers[message.user.id]);
-                                        timers[message.user.id] = setTimeout(function () {
-                                            SmartBlocks.basics.connected_users.remove(message.user);
-                                        }, 10000);
-                                    }
                                 });
 
-                                SmartBlocks.basics.connected_users.on("add", function () {
-                                    SmartBlocks.basics.connected_users.trigger("change");
-                                });
-
-                                SmartBlocks.basics.connected_users.on("remove", function () {
-                                    SmartBlocks.basics.connected_users.trigger("change");
-                                });
-
-                                setInterval(function () {
-                                    //SmartBlocks.heartBeat(current_user);
-                                }, 5000);
 
                             }
                         });
@@ -170,12 +175,13 @@ define([
             entry: function () {
                 if (!SmartBlocks.entry_app) {
                     var block = SmartBlocks.Data.blocks.where({
-                        token: SmartBlocks.Config.entry_app.block
+                        token: SmartBlocks.Config.startup_app.block
                     })[0];
                     if (block) {
+                        SmartBlocks.Url.params = SmartBlocks.Config.startup_app.url_params;
                         var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
                         var app = apps.where({
-                            token: SmartBlocks.Config.entry_app.app
+                            token: SmartBlocks.Config.startup_app.app
                         })[0];
 
                         if (app) {
@@ -189,6 +195,9 @@ define([
                 }
 
 
+            },
+            start_loading: function (message, steps) {
+                
             },
             types: {
                 count: 0,
