@@ -42,11 +42,16 @@ define([
                     this.route(/^([a-zA-Z]*?)\/(.*?)$/, "launch_app", this.launch_app);
                 },
                 entry: function () {
+                    SmartBlocks.Url.params = {};
+                    SmartBlocks.Url.appname = "";
+                    SmartBlocks.Url.full = "";
                     SmartBlocks.Methods.entry();
                 },
                 launch_app: function (appname, params) {
 
                     SmartBlocks.Url.params = params ? params.split("/") : [];
+                    SmartBlocks.Url.appname = appname;
+                    SmartBlocks.Url.full = appname + "/" + params;
                     var app = SmartBlocks.Data.apps.where({
                         token: appname
                     })[0];
@@ -201,6 +206,10 @@ define([
                                 //Done loading types
                                 Backbone.history.start();
                                 $(window).bind("hashchange", function () {
+                                    for (var k in SmartBlocks.Data.apps.models) {
+                                        var app = SmartBlocks.Data.apps.models[k];
+                                        app.route();
+                                    }
                                     SmartBlocks.events.trigger("hashchange");
                                 });
 
