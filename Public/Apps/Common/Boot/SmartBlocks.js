@@ -206,11 +206,19 @@ define([
                                 //Done loading types
                                 Backbone.history.start();
                                 $(window).bind("hashchange", function () {
+                                    SmartBlocks.events.trigger("hashchange");
                                     for (var k in SmartBlocks.Data.apps.models) {
                                         var app = SmartBlocks.Data.apps.models[k];
-                                        app.route();
+                                        if (app.ready)
+                                            app.route();
+                                        else {
+                                            app.events.once("ready", function () {
+                                                app.route();
+                                                console.log("routed");
+                                            });
+                                        }
+
                                     }
-                                    SmartBlocks.events.trigger("hashchange");
                                 });
 
                             }

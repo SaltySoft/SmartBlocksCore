@@ -1,0 +1,6 @@
+{
+    "startup_app": {
+        "block": "kernel",
+        "app": "app_organizer"
+    }
+}
