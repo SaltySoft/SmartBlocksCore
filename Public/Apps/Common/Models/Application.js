@@ -83,6 +83,11 @@ define([
                 }
 
             }
+        },
+        getBlock: function () {
+            var base = this;
+            var block = SmartBlocks.Data.blocks.get(base.get("block_token"));
+            return block;
         }
     });
 

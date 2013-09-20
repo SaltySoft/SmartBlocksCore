@@ -5,8 +5,9 @@ define([
     'jqueryflip',
     'text!Apps/AppOrganizer/Templates/dashboard.html',
     "Apps/AppOrganizer/Collections/Blocks",
+    "./AppThumbnail",
     "amplify"
-], function ($, _, Backbone, JqueryFlip, DashboardTemplate, BlocksCollection) {
+], function ($, _, Backbone, JqueryFlip, DashboardTemplate, BlocksCollection, AppThumbnail) {
     var Dashboard = Backbone.View.extend({
         tagName: "div",
         className: "k_ao_dashboard",
@@ -40,6 +41,13 @@ define([
 
             base.$el.html(template);
             base.initializeEvents();
+
+            for (var k in SmartBlocks.Data.apps.models) {
+                var app = SmartBlocks.Data.apps.models[k];
+                var thumbnail = new AppThumbnail(app);
+                base.$el.find(".apps_container").append(thumbnail.$el);
+                thumbnail.init();
+            }
         },
         initializeEvents: function () {
             var base = this;
