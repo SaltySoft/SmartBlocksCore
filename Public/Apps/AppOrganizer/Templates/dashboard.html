@@ -10,6 +10,7 @@
     <div class="block_section">
 
         <% _.each(block.get('apps'), function (app) { %>
+        <% if (!app.get('dashboard_ignore')) { %>
         <div class="dashboard_app" data-appid="<%= app.get('id') %>" data-link="<%= app.get('link') %>" style="background-color: <%= block.get('color')%>" data-flip="0"
              data-description="<%= app.get('description') %>" data-link="<%= app.get('link') %>">
             <a class="nameLink" href="<%= app.get('link') %>"><%= app.get('name') %></a>
@@ -38,6 +39,7 @@
                <img src="/images/icons/information.png" />
             </a>
         </div>
+        <% } %>
         <% }); %>
         <div style="clear:both"></div>
         <div style="clear:both"></div>

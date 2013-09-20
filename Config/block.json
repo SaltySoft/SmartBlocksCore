@@ -13,6 +13,17 @@
             "logo_url": "/images/icons/user.png",
             "block_token": "kernel",
             "entry_point": "Apps/AppOrganizer/Views/DashBoard",
+            "style": "Apps/AppOrganizer/Css/app_organizer.less",
+            "dashboard_ignore" : true
+        },
+        {
+            "name": "Socials and stuff",
+            "token": "kernel-socials",
+            "description": "Socials app",
+            "link": "#kernel-socials",
+            "logo_url": "/images/icons/user.png",
+            "block_token": "kernel",
+            "entry_point": "Apps/Socials/Views/MainView",
             "style": "Apps/AppOrganizer/Css/app_organizer.less"
         }
     ]

@@ -1,14 +1,13 @@
-.main_view {
-    width: 1000px;
-    margin: auto;
-    border-top: 10px #1c7783 solid;
-}
-.control_bar h2 {
-    float:right
-}
+.socials_main_view {
+  width: 1000px;
+  margin: auto;
+  border-top: 10px #1c7783 solid;
 
+  .control_bar h2 {
+    float: right
+  }
 
-.control_bar a {
+  .control_bar a {
     display: block;
     width: 150px;
     height: 30px;
@@ -21,79 +20,78 @@
     margin-right: 5px;
     text-decoration: none;
     background: ghostwhite;
-}
+  }
 
-.control_bar a.selected {
+  .control_bar a.selected {
     background: #2bb8cb;
     color: white;
-}
+  }
 
-.control_bar a:hover {
+  .control_bar a:hover {
     background: #d3d3d3;
     color: ghostwhite;
-}
+  }
 
 /**
 * Me page
 */
 
-h3 {
+  h3 {
     padding-bottom: 5px;
     border-bottom: 2px grey solid;
     color: #9a9a9a;
     display: inline-block;
-}
+  }
 
-.user_info > div {
-    /*text-align: center;*/
+  .user_info > div {
+  /*text-align: center;*/
     padding: 5px;
-}
+  }
 
-.contacts > div {
+  .contacts > div {
     padding: 5px;
-}
+  }
 
-.user_info .username {
+  .user_info .username {
     font-size: 23px;
-}
+  }
 
-
-.contacts_notifs {
+  .contacts_notifs {
     background: #ebebeb;
     height: 200px;
     margin-bottom: 5px;
     padding: 5px;
-}
+  }
 
-.contacts_viewer {
+  .contacts_viewer {
     background: #ebebeb;
     height: 250px;
     margin-bottom: 5px;
     padding: 5px;
     overflow-y: scroll;
-}
+  }
 
-.contact_finder {
+  .contact_finder {
     padding: 5px;
     background: #ebebeb;
-}
-.contact_finder form {
-    /*text-align: center;*/
-}
+  }
+  .contact_finder form {
+  /*text-align: center;*/
+  }
 
-.user_finder_input {
+  .user_finder_input {
     width: 200px;
-}
+  }
 
-.user_finder_results {
+  .user_finder_results {
     min-height: 200px;
     padding: 5px;
-}
+  }
 
 /**
 * Contact list
 */
-.contact_list_item {
+  .contact_list_item {
     position: relative;
     width: 100px;
     height: 100px;
@@ -101,9 +99,9 @@ h3 {
     margin-right: 5px;
     margin-top: 5px;
     float: left;
-}
+  }
 
-.contact_list_item .username {
+  .contact_list_item .username {
     background: grey;
     color: white;
     text-align: center;
@@ -113,35 +111,36 @@ h3 {
     font-size: small;
     height: 15px;
 
-}
+  }
 
-.contact_list_item .online {
+  .contact_list_item .online {
     height: 15px;
     width: 15px;
     background: #696969;
     position: absolute;
     right: 0px;
     top: 0px;
-}
+  }
 
-.contact_list_item .online.true {
+  .contact_list_item .online.true {
     background: #00cc00;
-}
+  }
 
-.accept, .decline {
+  .accept, .decline {
     display: none;
     position: absolute;
     top: 0px;
     right: 20px;
-}
+  }
 
-.accept {
+  .accept {
     right: 35px;
-}
+  }
 
-.add_button {
+  .add_button {
     display: none;
     position: absolute;
     top: 0px;
     left: 0px;
+  }
 }

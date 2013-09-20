@@ -32,6 +32,7 @@ define([
         },
         render: function () {
             var base = this;
+
             var template = _.template(DashboardTemplate, {
                 blocks: base.blocks_collection.models,
                 kernel: "kernel"

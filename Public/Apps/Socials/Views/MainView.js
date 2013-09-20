@@ -9,7 +9,7 @@ define([
 ], function ($, _, Backbone, MainViewTemplate, ProfileView, MeView, User) {
     var MainView = Backbone.View.extend({
         tagName: "div",
-        className: "main_view",
+        className: "socials_main_view",
         initialize: function () {
 
         },
