@@ -99,7 +99,7 @@ define([
                                 }
                             }
                             if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
-                                if (!shortcut.app || shortcut.app.get("token") == shortcut.app.get("token")){
+                                if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0){
                                     shortcut.action();
                                     e.preventDefault();
                                 }
@@ -112,12 +112,12 @@ define([
                         base.keydown_list[e.keyCode] = false;
                     });
                 },
-                add: function (list, callback, app) {
+                add: function (list, callback, url_mask) {
                     var base = this;
                     base.shortcuts.push({
                         keys: list,
                         action: callback,
-                        app: app
+                        url_mask: url_mask
                     });
                 },
                 clear: function (){
