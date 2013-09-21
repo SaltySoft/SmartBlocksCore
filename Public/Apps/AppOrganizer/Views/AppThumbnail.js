@@ -7,9 +7,9 @@ define([
     var View = Backbone.View.extend({
         tagName: "div",
         className: "application_thumbnail",
-        initialize: function (app) {
+        initialize: function () {
             var base = this;
-            base.app = app;
+            base.application = base.model;
         },
         init: function () {
             var base = this;
@@ -20,10 +20,9 @@ define([
             var base = this;
 
             var template = _.template(thumbnail_tpl, {
-                app: base.app
+                app: base.application
             });
             base.$el.html(template);
-
 
         },
         registerEvents: function () {
