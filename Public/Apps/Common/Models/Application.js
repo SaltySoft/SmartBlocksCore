@@ -28,7 +28,7 @@ define([
         },
         quit: function () {
             var base = this;
-            SmartBlocks.Methods.entry();
+            window.location = "#";
         },
         initRoutes: function (obj) {
             var base = this;

@@ -76,36 +76,48 @@ define([
                 init: function () {
                     var base = this;
 
-                    base.shortcuts = $.extend({}, base.initial_shortcuts);
+                    base.shortcuts = $.extend([], base.initial_shortcuts);
 
-                    base.keydown_list = [];
+                    base.keydown_list = {};
 
                     $(document).bind("keydown", function (e) {
-                        base.keydown_list.push(e.keyCode);
-                    });
+                        base.keydown_list[e.keyCode] = true;
 
-                    $(document).bind("keyup", function (e) {
+                        var active_keys = [];
+                        for (var k in base.keydown_list) {
+                            if (base.keydown_list[k]) {
+                                active_keys.push(k);
+                            }
+                        }
                         for (var k in base.shortcuts) {
                             var shortcut = base.shortcuts[k];
                             var checked_keys = 0;
                             for (var i in shortcut.keys) {
                                 var key = shortcut.keys[i];
-                                if (_.contains(base.keydown_list, key)) {
+                                if (base.keydown_list[key]) {
                                     checked_keys += 1;
                                 }
                             }
-                            if (checked_keys == base.keydown_list.length && checked_keys == shortcut.keys.length) {
-                                shortcut.action();
+                            if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
+                                if (!shortcut.app || shortcut.app.get("token") == shortcut.app.get("token")){
+                                    shortcut.action();
+                                    e.preventDefault();
+                                }
+
                             }
                         }
-                        base.keydown_list = [];
+                    });
+
+                    $(document).bind("keyup", function (e) {
+                        base.keydown_list[e.keyCode] = false;
                     });
                 },
-                add: function (list, callback) {
+                add: function (list, callback, app) {
                     var base = this;
                     base.shortcuts.push({
                         keys: list,
-                        action: callback
+                        action: callback,
+                        app: app
                     });
                 },
                 clear: function (){
