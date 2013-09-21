@@ -1,4 +1,5 @@
 define([
+    'jquery',
     'underscore',
     'backbone',
     'SmartBlocks',
@@ -6,7 +7,7 @@ define([
     "LoadingScreen",
     "UsersCollection",
     "Apps/UserRequester/app"
-], function (_, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
+], function ($, _, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
     var SmartBlocks = {
         Url: {
             params: []
@@ -63,6 +64,58 @@ define([
 
             });
 
+            SmartBlocks.Shortcuts = {
+                initial_shortcuts: [
+                    {
+                        keys: [27],
+                        action: function () {
+                            SmartBlocks.current_app.quit();
+                        }
+                    }
+                ],
+                init: function () {
+                    var base = this;
+
+                    base.shortcuts = $.extend({}, base.initial_shortcuts);
+
+                    base.keydown_list = [];
+
+                    $(document).bind("keydown", function (e) {
+                        base.keydown_list.push(e.keyCode);
+                    });
+
+                    $(document).bind("keyup", function (e) {
+                        for (var k in base.shortcuts) {
+                            var shortcut = base.shortcuts[k];
+                            var checked_keys = 0;
+                            for (var i in shortcut.keys) {
+                                var key = shortcut.keys[i];
+                                if (_.contains(base.keydown_list, key)) {
+                                    checked_keys += 1;
+                                }
+                            }
+                            if (checked_keys == base.keydown_list.length && checked_keys == shortcut.keys.length) {
+                                shortcut.action();
+                            }
+                        }
+                        base.keydown_list = [];
+                    });
+                },
+                add: function (list, callback) {
+                    var base = this;
+                    base.shortcuts.push({
+                        keys: list,
+                        action: callback
+                    });
+                },
+                clear: function (){
+                    var base = this;
+                    base.shortcuts = $.extend({}, base.initial_shortcuts);
+                }
+            };
+
+            SmartBlocks.Shortcuts.init();
+
             SmartBlocks.router = new SmartBlocks.basics.Router();
 
 
@@ -70,11 +123,7 @@ define([
 
             SmartBlocks.Data.blocks = new SmartBlocks.Collections.Blocks();
             SmartBlocks.Data.apps = new SmartBlocks.Collections.Applications();
-            $(document).keyup(function (e) {
-                if (e.keyCode == 27) {
-                    SmartBlocks.current_app.quit();
-                }
-            });
+
 
             SmartBlocks.Methods.startMainLoading("Loading apps", 8);
 
