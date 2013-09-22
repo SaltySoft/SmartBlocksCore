@@ -41,6 +41,8 @@ define([
                 },
                 initialize: function () {
                     this.route(/^([a-zA-Z]*?)\/(.*?)$/, "launch_app", this.launch_app);
+                    this.routesHit = 0;
+                    Backbone.history.on('route', function() { this.routesHit++; }, this);
                 },
                 entry: function () {
                     SmartBlocks.Url.params = {};
@@ -59,6 +61,13 @@ define([
                     if (app && (!SmartBlocks.current_app || SmartBlocks.current_app.get("token") != app.get("token"))) {
                         app = SmartBlocks.Data.apps.get(app.get('token'));
                         SmartBlocks.Methods.setApp(app);
+                    }
+                },
+                back: function() {
+                    if(this.routesHit > 1) {
+                        window.history.back();
+                    } else {
+                        window.location = "#";
                     }
                 }
 
