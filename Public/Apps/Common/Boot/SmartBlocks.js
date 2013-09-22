@@ -1,4 +1,5 @@
 define([
+    'jquery',
     'underscore',
     'backbone',
     'SmartBlocks',
@@ -6,7 +7,7 @@ define([
     "LoadingScreen",
     "UsersCollection",
     "Apps/UserRequester/app"
-], function (_, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
+], function ($, _, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
     var SmartBlocks = {
         Url: {
             params: []
@@ -40,6 +41,8 @@ define([
                 },
                 initialize: function () {
                     this.route(/^([a-zA-Z]*?)\/(.*?)$/, "launch_app", this.launch_app);
+                    this.routesHit = 0;
+                    Backbone.history.on('route', function() { this.routesHit++; }, this);
                 },
                 entry: function () {
                     SmartBlocks.Url.params = {};
@@ -59,9 +62,80 @@ define([
                         app = SmartBlocks.Data.apps.get(app.get('token'));
                         SmartBlocks.Methods.setApp(app);
                     }
+                },
+                back: function() {
+                    if(this.routesHit > 1) {
+                        window.history.back();
+                    } else {
+                        window.location = "#";
+                    }
                 }
 
             });
+
+            SmartBlocks.Shortcuts = {
+                initial_shortcuts: [
+                    {
+                        keys: [27],
+                        action: function () {
+                            SmartBlocks.current_app.quit();
+                        }
+                    }
+                ],
+                init: function () {
+                    var base = this;
+
+                    base.shortcuts = $.extend([], base.initial_shortcuts);
+
+                    base.keydown_list = {};
+
+                    $(document).bind("keydown", function (e) {
+                        base.keydown_list[e.keyCode] = true;
+
+                        var active_keys = [];
+                        for (var k in base.keydown_list) {
+                            if (base.keydown_list[k]) {
+                                active_keys.push(k);
+                            }
+                        }
+                        for (var k in base.shortcuts) {
+                            var shortcut = base.shortcuts[k];
+                            var checked_keys = 0;
+                            for (var i in shortcut.keys) {
+                                var key = shortcut.keys[i];
+                                if (base.keydown_list[key]) {
+                                    checked_keys += 1;
+                                }
+                            }
+                            if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
+                                if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0){
+                                    shortcut.action();
+                                    e.preventDefault();
+                                }
+
+                            }
+                        }
+                    });
+
+                    $(document).bind("keyup", function (e) {
+                        base.keydown_list[e.keyCode] = false;
+                    });
+                },
+                add: function (list, callback, url_mask) {
+                    var base = this;
+                    base.shortcuts.push({
+                        keys: list,
+                        action: callback,
+                        url_mask: url_mask
+                    });
+                },
+                clear: function (){
+                    var base = this;
+                    base.shortcuts = $.extend({}, base.initial_shortcuts);
+                }
+            };
+
+            SmartBlocks.Shortcuts.init();
 
             SmartBlocks.router = new SmartBlocks.basics.Router();
 
@@ -70,11 +144,7 @@ define([
 
             SmartBlocks.Data.blocks = new SmartBlocks.Collections.Blocks();
             SmartBlocks.Data.apps = new SmartBlocks.Collections.Applications();
-            $(document).keyup(function (e) {
-                if (e.keyCode == 27) {
-                    SmartBlocks.current_app.quit();
-                }
-            });
+
 
             SmartBlocks.Methods.startMainLoading("Loading apps", 8);
 
