@@ -9,9 +9,6 @@ var apps = [
     "underscore",
     "backbone",
     "SmartBlocks",
-    "Apps/Chat/app",
-    "Apps/FileSharing/app",
-    "Apps/NotificationsCenter/app",
     "UserModel",
     "UsersCollection",
     "Apps/UserRequester/app",
@@ -29,7 +26,7 @@ $(document).ready(function () {
     //Uncomment next line to disable default context menu everywhere in SmartBlocks
 //    $("body").attr("oncontextmenu", "return false");
     requirejs(apps,
-        function (/*defaults, */_, Backbone, sb_basics, ChatApp, FileSharingApp, NotifCenterApp, User, UsersCollection, UserRequester, Externals, LoadingScreen, SmartBlocks, App) {
+        function (/*defaults, */_, Backbone, sb_basics, User, UsersCollection, UserRequester, Externals, LoadingScreen, SmartBlocks, App) {
             SmartBlocks.init();
         });
 });
