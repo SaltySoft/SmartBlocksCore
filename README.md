@@ -61,7 +61,6 @@ the config file that describes available apps in a block.
         "name/name/:param1/name/:param2" : "route_keyword"
     }
 }
-}
 ```
 In this app config example, the developer will connect routes to action in the front-end in the following way :
 
@@ -85,11 +84,10 @@ SmartBlocks.Shortcuts.add([17, 18, 68], function () {
 }, "#appname/subappname");
 ```
 
-In this example, a shortcut on Ctr-Alt-A is created, and effective only when the URL starts with
-#appname/subappname
+In this example, a shortcut on Ctr-Alt-A is created, and effective only when the URL starts with #appname/subappname
 
 And so on...
-------------
+============
 
 I know, I don't explain much about how to use the framework, but the project is still under heavy development.
 However, I will write a lot more about SmartBlocks in a near future, so if that kind of project seems interesting
