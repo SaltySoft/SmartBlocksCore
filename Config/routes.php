@@ -34,7 +34,7 @@
  * ));
  *
  */
-Router::connect(array("url" => "root", "controller" => "Organizer", "action" => "app_organizer"));
+Router::connect(array("url" => "root", "controller" => "Pages", "action" => "home"));
 Router::connect(array("url" => "/set_locale/:locale", "controller" => "Pages", "action" => "setLocale"));
 
 Router::connect(array("url" => "/Files/get_file/#id", "controller" => "Files", "action" => "get_file"));

@@ -173,10 +173,11 @@ define([
                                             SmartBlocks.Methods.count += types != null ? types.length : 0;
                                         }
                                         SmartBlocks.Methods.processed = 0;
+                                        SmartBlocks.Blocks = {};
                                         for (var k in blocks.models) {
                                             var block = blocks.models[k];
                                             var types = block.get("types");
-                                            SmartBlocks.Blocks = {};
+
                                             SmartBlocks.Blocks[block.get("name")] = {
                                                 Models: {},
                                                 Collections: {},
