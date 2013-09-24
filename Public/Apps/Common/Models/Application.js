@@ -14,10 +14,13 @@ define([
         },
         launch: function () {
             var base = this;
+            SmartBlocks.Methods.startMainLoading("Loading " + base.get('name'), 2);
+            
             if (base.get("entry_point")) {
                 base.ready = false;
 
                 require([base.get("entry_point")], function (View) {
+                    SmartBlocks.Methods.continueMainLoading(2);
                     var view = new View();
                     SmartBlocks.Methods.render(view);
                     view.init(base);
