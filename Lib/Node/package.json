@@ -1,0 +1,40 @@
+{
+    "name": "LiveServ",
+    "description": "Live relay server for SmartBlocks",
+    "version": "0.1.0",
+    "homepage": "https://github.com/SaltySoft/SmartBlocksCore",
+    "author": {
+        "name": "Antoine Jackson",
+        "email": "a.j.william26@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/SaltySoft/SmartBlocksCore.git"
+    },
+    "bugs": {
+        "url": "https://github.com/SaltySoft/SmartBlocksCore/issues"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/SaltySoft/SmartBlocksCore/blob/master/LICENSE-MIT"
+        }
+    ],
+    "main": "lib/LiveServ",
+    "engines": {
+        "node": ">= 0.8.0"
+    },
+    "scripts": {
+        "test": "grunt nodeunit"
+    },
+    "devDependencies": {
+        "grunt-contrib-jshint": "~0.6.4",
+        "grunt-contrib-nodeunit": "~0.2.0",
+        "grunt-contrib-watch": "~0.5.3",
+        "grunt": "~0.4.1",
+        "http": "0.9",
+        "socket.io": "~0.10.18"
+
+    },
+    "keywords": []
+}

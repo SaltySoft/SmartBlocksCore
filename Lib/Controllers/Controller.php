@@ -173,7 +173,7 @@ class Controller
         //WebSockets
 
         $this->set("_session_id", MuffinApplication::getSessionId());
-        $this->set("_socket_serv", "ws://" . $_SERVER["SERVER_NAME"] . ":" . (defined("NODE_PORT") ? NODE_PORT : "8899"));
+        $this->set("_socket_serv", "http://" . $_SERVER["SERVER_NAME"] . ":" . (defined("NODE_PORT") ? NODE_PORT : "8899"));
 
         if ($this->rendered)
         {
