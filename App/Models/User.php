@@ -295,16 +295,18 @@ class User extends UserBase
      *
      * This function restricts data access in controllers.
      */
-    public static function restrict($required_right, $interface = false)
+    public static function restrict($required_right = null, $interface = false)
     {
         $current_user = \User::current_user();
         $continue = false;
-
-        foreach ($current_user->getRights() as $right)
+        if (is_object($current_user))
         {
-            if ($right->getToken() == $required_right)
+            foreach ($current_user->getRights() as $right)
             {
-                $continue = true;
+                if ($right->getToken() == $required_right || $required_right == null)
+                {
+                    $continue = true;
+                }
             }
         }
 
