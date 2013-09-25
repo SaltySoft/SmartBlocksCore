@@ -152,6 +152,7 @@ define([
             SmartBlocks.Methods.startMainLoading("Loading apps", 8);
 
             User.getCurrent(function (current_user) {
+
                 SmartBlocks.basics.connected_users = new UsersCollection();
 
                 var timers = [];
@@ -253,7 +254,6 @@ define([
             },
             setApp: function (app) {
                 var base = this;
-                SmartBlocks.current_app = app;
                 app.launch();
 
             },

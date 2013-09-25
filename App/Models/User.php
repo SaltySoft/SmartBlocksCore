@@ -47,11 +47,6 @@ class User extends UserBase
     private $groups;
 
     /**
-     * @ManyToMany(targetEntity="Job", inversedBy="users")
-     */
-    private $jobs;
-
-    /**
      * @Column(type="string")
      */
     private $token;
@@ -79,6 +74,11 @@ class User extends UserBase
      */
     private $last_updated;
 
+    /**
+     * @OneToMany(targetEntity="Right", mappedBy="user")
+     */
+    private $rights;
+
 
     public function __construct()
     {
@@ -86,8 +86,8 @@ class User extends UserBase
         $this->lastname = "";
         $this->token = "";
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->jobs = new \Doctrine\Common\Collections\ArrayCollection();
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->rights = new \Doctrine\Common\Collections\ArrayCollection();
         $this->last_updated = time();
     }
 
@@ -147,21 +147,6 @@ class User extends UserBase
         return $this->groups;
     }
 
-    public function addJob($job)
-    {
-        $this->jobs[] = $job;
-    }
-
-    public function removeJob($job)
-    {
-        $this->jobs->removeElement($job);
-    }
-
-    public function getJobs()
-    {
-        return $this->jobs;
-    }
-
     public function setToken($token)
     {
         $this->token = $token;
@@ -215,8 +200,22 @@ class User extends UserBase
     }
 
 
+    public function getRights()
+    {
+        return $this->rights;
+    }
+
+
+
     public function toArray($load_sub = 1)
     {
+
+        $rights = array("user");
+
+        foreach ($this->rights as $right)
+        {
+            $rights[] = $right->getToken();
+        }
 
 
         $array = array(
@@ -226,7 +225,8 @@ class User extends UserBase
             "username" => $this->getName(),
             "email" => $this->getEmail(),
             "session_id" => $this->getSessionId(),
-            "last_updated" => $this->last_updated
+            "last_updated" => $this->last_updated,
+            "rights" => $rights
         );
 
 
