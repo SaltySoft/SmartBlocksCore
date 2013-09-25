@@ -28,6 +28,7 @@ define([
                         base.ready = true;
                         base.events.trigger("ready");
                         SmartBlocks.current_app = base;
+                        base.routeit();
                     });
                 }
             } else {
@@ -86,7 +87,6 @@ define([
                 }
 
                 if (do_it) {
-                    console.log("route string ", route_params[j], " now calling ", route);
                     if (base.routes)
                         base.routes[route].apply(base, parameters);
                     break;

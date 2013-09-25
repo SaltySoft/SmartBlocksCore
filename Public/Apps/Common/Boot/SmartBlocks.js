@@ -328,7 +328,6 @@ define([
                                         else {
                                             app.events.once("ready", function () {
                                                 app.route();
-                                                console.log("routed");
                                             });
                                         }
 
