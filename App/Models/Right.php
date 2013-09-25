@@ -34,31 +34,16 @@ class Right extends Model
     /**
      * @Column(type="string")
      */
-    private $name;
-    
-    /**
-     * @Column(type="string")
-     */
     private $token;
 
     /**
-     * @ManyToMany(targetEntity="Job", inversedBy="rights")
+     * @ManyToOne(targetEntity="User")
      */
-    private $jobs;
+    private $user;
 
     public function getId()
     {
         return $this->id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function setToken($token)
@@ -71,22 +56,14 @@ class Right extends Model
         return $this->token;
     }
 
-    public function addJob($job)
+    public function setUser($user)
     {
-        $this->jobs[] = $job;
+        $this->user = $user;
     }
 
-    public function removeJob($job)
+    public function getUser()
     {
-        $this->jobs->removeElement($job);
+        return $this->user;
     }
-
-    public function getJobs()
-    {
-        return $this->jobs;
-    }
-
-
-    
 }
 

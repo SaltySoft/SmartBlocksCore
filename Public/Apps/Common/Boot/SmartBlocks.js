@@ -193,7 +193,7 @@ define([
                                         }
 
                                         if ("WebSocket" in window) {
-                                            if (io) {
+                                            if (window.io) {
                                                 console.log(io);
                                                 var socket = io.connect("http://" + SmartBlocks.Config.server_name + ":10001");
                                                 socket.emit('set id', SmartBlocks.Config.session_id);

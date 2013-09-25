@@ -63,7 +63,7 @@ class User extends UserBase
 
     /**
      * @ManyToMany(targetEntity="User", inversedBy="contacts_with_me")
-     *  @JoinTable(name="user_contacts",
+     * @JoinTable(name="user_contacts",
      *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="contact_id", referencedColumnName="id")})
      */
@@ -215,7 +215,6 @@ class User extends UserBase
     }
 
 
-
     public function toArray($load_sub = 1)
     {
 
@@ -229,7 +228,6 @@ class User extends UserBase
             "session_id" => $this->getSessionId(),
             "last_updated" => $this->last_updated
         );
-
 
 
         if ($load_sub == 1)
@@ -288,5 +286,39 @@ class User extends UserBase
 
         }
         return $hasright;
+    }
+
+
+    /**
+     * @param $required_right
+     * @param bool $interface
+     *
+     * This function restricts data access in controllers.
+     */
+    public static function restrict($required_right, $interface = false)
+    {
+        $current_user = \User::current_user();
+        $continue = false;
+
+        foreach ($current_user->getRights() as $right)
+        {
+            if ($right->getToken() == $required_right)
+            {
+                $continue = true;
+            }
+        }
+
+        if (!$continue)
+        {
+            if ($interface)
+            {
+                \Router::redirect("/Users/login_form");
+            }
+            else
+            {
+                \Router::redirect("/Users/unauthorized");
+            }
+
+        }
     }
 }
