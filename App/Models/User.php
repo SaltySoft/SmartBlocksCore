@@ -308,6 +308,10 @@ class User extends UserBase
                     $continue = true;
                 }
             }
+            if ($required_right == null)
+            {
+                $continue = true;
+            }
         }
 
         if (!$continue)
