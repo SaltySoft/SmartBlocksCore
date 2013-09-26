@@ -33,8 +33,7 @@ define([
                 }
             } else {
                 SmartBlocks.basics.show_message("You don't have the rights to access this app");
-                if (!SmartBlocks.current_app)
-                    window.location = "#";
+                SmartBlocks.router.back();
             }
         },
         quit: function () {

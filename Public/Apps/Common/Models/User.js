@@ -72,7 +72,7 @@ define([
                     has_right = true;
                 }
             }
-            return has_right;
+            return has_right || token == undefined;
         }
     });
     User.getCurrent = function (callback) {

@@ -32,7 +32,7 @@ define([
 
             for (var k in SmartBlocks.Data.apps.models) {
                 var app = SmartBlocks.Data.apps.models[k];
-                if (!app.get("dashboard_ignore")) {
+                if (!app.get("dashboard_ignore") && SmartBlocks.current_user.hasRight(app.get("restricted_to"))) {
                     var thumbnail = new AppThumbnail({
                         model: app
                     });
