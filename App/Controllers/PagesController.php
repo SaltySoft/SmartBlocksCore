@@ -34,7 +34,7 @@ class PagesController extends Controller
 
     function home($params = array())
     {
-        $this->security_check();
+
     }
 
     /**

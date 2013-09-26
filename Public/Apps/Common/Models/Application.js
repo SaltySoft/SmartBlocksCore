@@ -14,19 +14,26 @@ define([
         },
         launch: function () {
             var base = this;
-            SmartBlocks.Methods.startMainLoading("Loading " + base.get('name'), 2);
-            
-            if (base.get("entry_point")) {
-                base.ready = false;
+            if (!base.get("restricted_to") || SmartBlocks.current_user.hasRight(base.get("restricted_to"))) {
+                SmartBlocks.Methods.startMainLoading("Loading " + base.get('name'), 2);
 
-                require([base.get("entry_point")], function (View) {
-                    SmartBlocks.Methods.continueMainLoading(2);
-                    var view = new View();
-                    SmartBlocks.Methods.render(view);
-                    view.init(base);
-                    base.ready = true;
-                    base.events.trigger("ready");
-                });
+                if (base.get("entry_point")) {
+                    base.ready = false;
+
+                    require([base.get("entry_point")], function (View) {
+                        SmartBlocks.Methods.continueMainLoading(2);
+                        var view = new View();
+                        SmartBlocks.Methods.render(view);
+                        view.init(base);
+                        base.ready = true;
+                        base.events.trigger("ready");
+                        SmartBlocks.current_app = base;
+                        base.routeit();
+                    });
+                }
+            } else {
+                SmartBlocks.basics.show_message("You don't have the rights to access this app");
+                SmartBlocks.router.back();
             }
         },
         quit: function () {
@@ -79,7 +86,6 @@ define([
                 }
 
                 if (do_it) {
-                    console.log("route string ", route_params[j], " now calling ", route);
                     if (base.routes)
                         base.routes[route].apply(base, parameters);
                     break;

@@ -27,6 +27,10 @@ $(document).ready(function () {
 //    $("body").attr("oncontextmenu", "return false");
     requirejs(apps,
         function (/*defaults, */_, Backbone, sb_basics, User, UsersCollection, UserRequester, Externals, LoadingScreen, SmartBlocks, App) {
-            SmartBlocks.init();
+            SmartBlocks.init(function () {
+
+            });
+
+
         });
 });

@@ -13,7 +13,8 @@ class NodeDiplomat
     {
         $data = array(
             "target_session_id" => $session_id,
-            "data" => $array
+            "data" => $array,
+            "origin" => session_id()
         );
         return self::post_to_url("http://".$_SERVER["SERVER_NAME"].":".self::$port."/send", $data);
 

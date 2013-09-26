@@ -8,6 +8,9 @@ define([
     "UsersCollection",
     "Apps/UserRequester/app"
 ], function ($, _, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
+
+    var temp = {};
+
     var SmartBlocks = {
         Url: {
             params: []
@@ -17,21 +20,19 @@ define([
         current_session: null,
         current_user: null,
         router: null,
-        init: function () {
-            if ("WebSocket" in window) {
-                var websocket = new WebSocket(socket_server, "muffin-protocol");
-                SmartBlocks.basics.websocket = websocket;
-            }
+        init: function (callback) {
+            temp.callback = callback;
+
             SmartBlocks.events = _.extend({}, Backbone.Events);
-            SmartBlocks.basics.server_handshake(websocket, user_session);
+//            SmartBlocks.basics.server_handshake(websocket, user_session);
             SmartBlocks.current_session = user_session;
 
-            if (websocket !== undefined) {
-                websocket.onmessage = function (data) {
-                    var message = SmartBlocks.basics.parseWs(data);
-                    SmartBlocks.events.trigger("ws_notification", message);
-                };
-            }
+//            if (websocket !== undefined) {
+//                websocket.onmessage = function (data) {
+//                    var message = SmartBlocks.basics.parseWs(data);
+//                    SmartBlocks.events.trigger("ws_notification", message);
+//                };
+//            }
 
             SmartBlocks.basics.Router = Backbone.Router.extend({
                 routes: {
@@ -42,7 +43,9 @@ define([
                 initialize: function () {
                     this.route(/^([a-zA-Z]*?)\/(.*?)$/, "launch_app", this.launch_app);
                     this.routesHit = 0;
-                    Backbone.history.on('route', function() { this.routesHit++; }, this);
+                    Backbone.history.on('route', function () {
+                        this.routesHit++;
+                    }, this);
                 },
                 entry: function () {
                     SmartBlocks.Url.params = {};
@@ -63,8 +66,8 @@ define([
                         SmartBlocks.Methods.setApp(app);
                     }
                 },
-                back: function() {
-                    if(this.routesHit > 1) {
+                back: function () {
+                    if (this.routesHit > 1) {
                         window.history.back();
                     } else {
                         window.location = "#";
@@ -108,7 +111,7 @@ define([
                                 }
                             }
                             if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
-                                if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0){
+                                if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0) {
                                     shortcut.action();
                                     e.preventDefault();
                                 }
@@ -129,7 +132,7 @@ define([
                         url_mask: url_mask
                     });
                 },
-                clear: function (){
+                clear: function () {
                     var base = this;
                     base.shortcuts = $.extend({}, base.initial_shortcuts);
                 }
@@ -149,6 +152,7 @@ define([
             SmartBlocks.Methods.startMainLoading("Loading apps", 8);
 
             User.getCurrent(function (current_user) {
+
                 SmartBlocks.basics.connected_users = new UsersCollection();
 
                 var timers = [];
@@ -188,6 +192,18 @@ define([
                                                 SmartBlocks.Methods.addType(type, block);
                                             }
                                         }
+
+                                        if ("WebSocket" in window) {
+                                            if (window.io) {
+                                                console.log(io);
+                                                var socket = io.connect("http://" + SmartBlocks.Config.server_name + ":10001");
+                                                socket.emit('set id', SmartBlocks.Config.session_id);
+                                                socket.on('msg', function (data) {
+                                                    SmartBlocks.events.trigger("ws_notification", data);
+                                                });
+                                            }
+                                        }
+
 
                                         //Hearbeats. If I'm living, my heart beats.
                                         SmartBlocks.events.on("ws_notification", function (message) {
@@ -238,7 +254,6 @@ define([
             },
             setApp: function (app) {
                 var base = this;
-                SmartBlocks.current_app = app;
                 app.launch();
 
             },
@@ -300,7 +315,7 @@ define([
                     SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
                     SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
                         success: function () {
-                            SmartBlocks.Methods.continueMainLoading((1  / SmartBlocks.Methods.count) * 5, "Loading data");
+                            SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 5, "Loading data");
                             if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                 //Done loading types
                                 Backbone.history.start();
@@ -313,13 +328,14 @@ define([
                                         else {
                                             app.events.once("ready", function () {
                                                 app.route();
-                                                console.log("routed");
                                             });
                                         }
 
                                     }
                                 });
-
+                                if (temp.callback) {
+                                    temp.callback();
+                                }
                             }
                         }
                     });

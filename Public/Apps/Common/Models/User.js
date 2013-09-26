@@ -9,7 +9,9 @@ define([
     var User = Backbone.Model.extend({
         urlRoot: "/Users",
         defaults: {
-            username: "unregistered"
+            username: "anonymous",
+            rights: [],
+            connected: false
         },
         parse: function (response, option) {
 
@@ -60,33 +62,41 @@ define([
                     }
                 }
             });
+        },
+        hasRight: function (token) {
+            var base = this;
+            var user_rights = base.get("rights");
+            var has_right = false;
+            for (var k in user_rights) {
+                if (user_rights[k] == token) {
+                    has_right = true;
+                }
+            }
+            return has_right || token == undefined;
         }
     });
     User.getCurrent = function (callback) {
-//        if (amplify.store("current_user")) {
-//            console.log(amplify.store("current_user"));
-//            var user = new User(amplify.store("current_user"));
-//            console.log(user);
-//            callback(user);
-//
-//        } else {
         $.ajax({
             url: "/Users/current_user",
             success: function (data, status) {
                 if (!data.status || data.status != "error") {
                     var user = new User(data);
+
                     user.fetch({
                         success: function () {
                             callback(user);
-                            amplify.store("current_user", user, { expires: 5000});
                         }
                     });
-
+                } else {
+                    var user = new User();
+                    callback(user);
                 }
+            },
+            error: function () {
+                var user = new User();
+                callback(user);
             }
         });
-//        }
-
     }
     window.User = User;
     return User;
