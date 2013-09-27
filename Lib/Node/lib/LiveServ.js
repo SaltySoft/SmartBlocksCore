@@ -26,12 +26,6 @@ exports.init = function () {
     };
 
     io.sockets.on('connection', function (socket) {
-        socket.emit('news', {hello: "world"});
-
-        socket.on('my other event', function (data) {
-            console.log(data);
-        });
-
         socket.on('set id', function (php_session_id) {
             socket.set('id', php_session_id);
         });

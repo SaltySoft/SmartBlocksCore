@@ -21,9 +21,11 @@ function send(request, response, io) {
             client.get('id', function (err, id) {
                 if (id == session_id) {
                     var elt = {};
+                    console.log("Emitted to " + id, elt);
                     elt = JSON.parse(post.data);
                     elt.origin = post.origin;
                     client.emit("msg", elt);
+
                 }
             });
         }
