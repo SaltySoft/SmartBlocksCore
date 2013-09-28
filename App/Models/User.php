@@ -263,29 +263,19 @@ class User extends UserBase
      * the specified group (the group must be a token).
      *
      * @param $right_token
-     * @param null $group_token
      * @return bool
      */
     public function hasRight($right_token, $group_token = null)
     {
         $hasright = false;
-        foreach ($this->roles as $role)
+        foreach ($this->rights as $right)
         {
-
-            foreach ($role->getJob()->getRights() as $right)
+            if ($right->getToken() == $right_token)
             {
-                if ($group_token == null)
-                {
-                    $hasright = $right->getToken() == $right_token;
-                }
-                else
-                {
-                    $hasright = $right->getToken() == $token && $role->getGroup()->getToken() == $group_token;
-                }
+                $hasright = true;
             }
-
         }
-        return $hasright;
+        return $hasright || $right_token == "user";
     }
 
 
