@@ -90,10 +90,7 @@ define([
             SmartBlocks.Shortcuts = {
                 initial_shortcuts: [
                     {
-                        keys: [27],
-                        action: function () {
-                            SmartBlocks.current_app.quit();
-                        }
+                       
                     }
                 ],
                 init: function () {

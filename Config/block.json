@@ -4,6 +4,7 @@
     "description": "This is the kernel app block",
     "color": "#846fb8",
     "types": null,
+    "main": "main",
     "apps": [
         {
             "name": "App organizer",
