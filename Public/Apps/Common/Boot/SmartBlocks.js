@@ -33,6 +33,17 @@ define([
 //                    SmartBlocks.events.trigger("ws_notification", message);
 //                };
 //            }
+            SmartBlocks.started = false;
+            SmartBlocks.events.on("start_solution", function () {
+                //Done loading everything, launching main app
+                if (!SmartBlocks.started) {
+                    SmartBlocks.Methods.start();
+                    if (temp.callback) {
+                        temp.callback();
+                    }
+                }
+                SmartBlocks.started = true;
+            });
 
             SmartBlocks.basics.Router = Backbone.Router.extend({
                 routes: {
@@ -248,6 +259,23 @@ define([
             main_loading: false
         },
         Methods: {
+            start: function () {
+                Backbone.history.start();
+                $(window).bind("hashchange", function () {
+                    SmartBlocks.events.trigger("hashchange");
+                    for (var k in SmartBlocks.Data.apps.models) {
+                        var app = SmartBlocks.Data.apps.models[k];
+                        if (app.ready)
+                            app.route();
+                        else {
+                            app.events.once("ready", function () {
+                                app.route();
+                            });
+                        }
+
+                    }
+                });
+            },
             render: function (view) {
                 var base = this;
                 $("#content").html(view.$el);
@@ -315,33 +343,40 @@ define([
                     SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
                     SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
                         success: function () {
-                            SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 5, "Loading data");
+                            SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
                             if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
-                                //Done loading types
-                                Backbone.history.start();
-                                $(window).bind("hashchange", function () {
-                                    SmartBlocks.events.trigger("hashchange");
-                                    for (var k in SmartBlocks.Data.apps.models) {
-                                        var app = SmartBlocks.Data.apps.models[k];
-                                        if (app.ready)
-                                            app.route();
-                                        else {
-                                            app.events.once("ready", function () {
-                                                app.route();
-                                            });
+                                var blocks = SmartBlocks.Data.blocks;
+                                var blocks_count = blocks.length;
+                                var processed_blocks = 0;
+                                for (var k in blocks.models) {
+                                    var block = blocks.models[k];
+                                    if (block.get("main")) {
+                                        console.log(block.get("name"), " has a main");
+                                        require([block.get("main")], function (main) {
+                                            main.init();
+                                            processed_blocks++;
+                                            if (processed_blocks >= blocks_count) {
+                                                SmartBlocks.events.trigger("start_solution");
+                                                SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
+                                            }
+                                        });
+                                    } else {
+                                        processed_blocks++;
+                                        if (processed_blocks >= blocks_count) {
+                                            SmartBlocks.events.trigger("start_solution");
+                                            SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
                                         }
-
                                     }
-                                });
-                                if (temp.callback) {
-                                    temp.callback();
                                 }
+
+
                             }
                         }
                     });
                 });
             }
         }
+
     };
 
     window.SmartBlocks = SmartBlocks;
