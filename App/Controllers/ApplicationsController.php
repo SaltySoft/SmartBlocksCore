@@ -31,7 +31,21 @@ class ApplicationsController extends \Controller
             {
                 foreach ($block_info["apps"] as $app_array)
                 {
-                    $response[] = $app_array;
+                    if (isset($app_array["restricted_to"]))
+                    {
+                        if (is_object(\User::current_user()))
+                        {
+                            if (\User::current_user()->hasRight($app_array["restricted_to"]))
+                            {
+                                $response[] = $app_array;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $response[] = $app_array;
+                    }
+
                 }
             }
         }
