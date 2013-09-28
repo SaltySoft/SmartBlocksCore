@@ -17,20 +17,12 @@ var apps = [
     "Apps/Common/Boot/SmartBlocks"
 ];
 
-if (app !== undefined) {
-    apps.push(app);
-}
-
-
 $(document).ready(function () {
     //Uncomment next line to disable default context menu everywhere in SmartBlocks
-//    $("body").attr("oncontextmenu", "return false");
     requirejs(apps,
-        function (/*defaults, */_, Backbone, sb_basics, User, UsersCollection, UserRequester, Externals, LoadingScreen, SmartBlocks, App) {
+        function (/*defaults, */_, Backbone, sb_basics, User, UsersCollection, UserRequester, Externals, LoadingScreen, SmartBlocks) {
             SmartBlocks.init(function () {
 
             });
-
-
         });
 });

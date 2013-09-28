@@ -24,15 +24,8 @@ define([
             temp.callback = callback;
 
             SmartBlocks.events = _.extend({}, Backbone.Events);
-//            SmartBlocks.basics.server_handshake(websocket, user_session);
-            SmartBlocks.current_session = user_session;
+//            SmartBlocks.current_session = user_session;
 
-//            if (websocket !== undefined) {
-//                websocket.onmessage = function (data) {
-//                    var message = SmartBlocks.basics.parseWs(data);
-//                    SmartBlocks.events.trigger("ws_notification", message);
-//                };
-//            }
             SmartBlocks.started = false;
             SmartBlocks.events.on("start_solution", function () {
                 //Done loading everything, launching main app
@@ -90,7 +83,7 @@ define([
             SmartBlocks.Shortcuts = {
                 initial_shortcuts: [
                     {
-                       
+
                     }
                 ],
                 init: function () {

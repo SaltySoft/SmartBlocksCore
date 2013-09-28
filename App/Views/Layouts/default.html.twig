@@ -4,17 +4,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>SmartBlocks</title>
-    {#<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">#}
     <link rel="stylesheet" href="/css/purecss.css" />
     {{ HtmlHelper.importCss("reset") }}
-    <link rel="stylesheet" type="text/css" href="/Apps/Common/Css/color_picker.css"/>
-    <link rel="stylesheet" type="text/css" href="/Apps/NotificationsCenter/Css/main.css"/>
     <script src="{{ _socket_serv }}/socket.io/socket.io.js"></script>
-
     {{ HtmlHelper.importJs("require") }}
     <link rel="icon" type="image/jpg" href="/images/favicon.png"/>
     <link href="/css/hot-sneaks/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-    {#<link href="/css/hot-sneaks/jquery-ui-min.css" rel="stylesheet">#}
     <script src="/javascript/jquery.js"></script>
     <script type="text/javascript" src="http://api.webshell.io/sdk/js?key=ff2d12da47afe0f0548d3e7df95095e5"></script>
 
@@ -27,12 +22,10 @@
     <link rel="stylesheet/less" type="text/css" href="/Apps/Common/Css/main.less" />
 </head>
 <body>
-
 <div id="flash_shower">
     <div id="flash_message"></div>
     <div style="clear:both"></div>
 </div>
-
 <div id="container">
     <div id="top_content"></div>
     <div id="inner_container">
@@ -42,27 +35,8 @@
     </div>
     <div id="bottom_content"></div>
 </div>
-<script type="text/javascript">
-
-    var socket_server = "{{ _socket_serv }}";
-    var user_session = "{{ _session_id }}";
-
-    {% if app  %}
-    var app = "{{ app }}";
-    {% else %}
-    var app = undefined;
-
-    {% endif %}
-</script>
-<div id="file_sharing_container"></div>
-<link rel="stylesheet" href="/Apps/Common/Css/text_editor_outer.css" type="text/css"/>
-<link rel="stylesheet" href="/Apps/UserRequester/Css/main.css" type="text/css"/>
-<link rel="stylesheet" href="/Apps/Chat/Css/chat.css" type="text/css"/>
-<link rel="stylesheet" href="/Apps/Chat/Css/discussion_creation.css" type="text/css"/>
 <script type="text/javascript" src="/Apps/Common/requireConfig.js"></script>
 <script type="text/javascript" src="/Apps/Common/main.js"></script>
-
-
 <script src="/javascript/less.js" type="text/javascript"></script>
 </body>
 </html>
