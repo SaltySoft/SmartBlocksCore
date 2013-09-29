@@ -37,9 +37,11 @@ define([
                         model: app
                     });
                     base.$el.find(".apps_container").append(thumbnail.$el);
-                    thumbnail.init();
+                    console.log(k, SmartBlocks.Data.apps.models.length);
+                    thumbnail.init(k == SmartBlocks.Data.apps.models.length - 1);
                 }
             }
+            base.$el.find(".apps_container").append('<div class="clearer"></div>');
         },
         initializeEvents: function () {
             var base = this;

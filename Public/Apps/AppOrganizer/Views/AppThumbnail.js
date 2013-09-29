@@ -11,8 +11,10 @@ define([
             var base = this;
             base.application = base.model;
         },
-        init: function () {
+        init: function (show_help) {
             var base = this;
+            base.show_help = show_help;
+            console.log(show_help);
 
             base.render();
         },
@@ -20,7 +22,8 @@ define([
             var base = this;
 
             var template = _.template(thumbnail_tpl, {
-                app: base.application
+                app: base.application,
+                show_help: base.show_help
             });
             base.$el.html(template);
 

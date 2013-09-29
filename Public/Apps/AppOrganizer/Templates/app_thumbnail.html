@@ -1,14 +1,20 @@
-<a href="<%= app.get('link') %>">
-    <div class="dashboard_app"  data-link="<%= app.get('link') %>" data-flip="0"
-         data-description="<%= app.get('description') %>" data-link="<%= app.get('link') %>">
-        <a class="nameLink" href="<%= app.get('link') %>"><%= app.get('name') %></a>
+<a href="<%= app.get('link') %>" >
+<div class="dashboard_app" data-link="<%= app.get('link') %>" data-flip="0"
 
-        <div>
-            <img class="appLogo" alt="logo" src="<%= app.get('logo_url') %>"/>
-        </div>
+    <% if (show_help) {%>
+    data-intro="Click on an app thumbnail to launch it." data-position="bottom"
+    <% } %>
+    data-description="<%= app.get('description') %>" data-link="<%= app.get('link') %>">
+    <a class="nameLink" href="<%= app.get('link') %>"><%= app.get('name') %></a>
 
-        <a href="javascript:void(0);" class="app_info_button">
-            <img src="/images/icons/information.png" />
-        </a>
+    <div>
+        <img class="appLogo" alt="logo" src="<%= app.get('logo_url') %>"/>
     </div>
+
+    <a href="javascript:void(0);" class="app_info_button" <% if (show_help) {%>
+    data-intro="Click here to see the app's description." data-position="right"
+    <% } %>   >
+        <img src="/images/icons/information.png"/>
+    </a>
+</div>
 </a>
