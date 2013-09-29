@@ -20,11 +20,15 @@ define([
         current_session: null,
         current_user: null,
         router: null,
-        init: function (callback) {
+        init: function (callback, production) {
             temp.callback = callback;
 
+            if (production) {
+                console.log = function () {
+                };
+            }
+
             SmartBlocks.events = _.extend({}, Backbone.Events);
-//            SmartBlocks.current_session = user_session;
 
             SmartBlocks.started = false;
             SmartBlocks.events.on("start_solution", function () {
@@ -82,9 +86,6 @@ define([
 
             SmartBlocks.Shortcuts = {
                 initial_shortcuts: [
-                    {
-
-                    }
                 ],
                 init: function () {
                     var base = this;
@@ -94,29 +95,30 @@ define([
                     base.keydown_list = {};
 
                     $(document).bind("keydown", function (e) {
-                        base.keydown_list[e.keyCode] = true;
+                        if (e.keyCode != 123) { //123 == F12. This key blocks all other shortcuts when opening debug console.
+                           base.keydown_list[e.keyCode] = true;
 
-                        var active_keys = [];
-                        for (var k in base.keydown_list) {
-                            if (base.keydown_list[k]) {
-                                active_keys.push(k);
-                            }
-                        }
-                        for (var k in base.shortcuts) {
-                            var shortcut = base.shortcuts[k];
-                            var checked_keys = 0;
-                            for (var i in shortcut.keys) {
-                                var key = shortcut.keys[i];
-                                if (base.keydown_list[key]) {
-                                    checked_keys += 1;
+                            var active_keys = [];
+                            for (var k in base.keydown_list) {
+                                if (base.keydown_list[k]) {
+                                    active_keys.push(k);
                                 }
                             }
-                            if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
-                                if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0) {
-                                    shortcut.action();
-                                    e.preventDefault();
+                            for (var k in base.shortcuts) {
+                                var shortcut = base.shortcuts[k];
+                                var checked_keys = 0;
+                                for (var i in shortcut.keys) {
+                                    var key = shortcut.keys[i];
+                                    if (base.keydown_list[key]) {
+                                        checked_keys += 1;
+                                    }
                                 }
-
+                                if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
+                                    if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0) {
+                                        shortcut.action();
+                                        e.preventDefault();
+                                    }
+                                }
                             }
                         }
                     });
