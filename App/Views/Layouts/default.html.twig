@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>SmartBlocks</title>
-    <link rel="stylesheet" href="/css/purecss.css" />
+
     {{ HtmlHelper.importCss("reset") }}
     <script src="{{ _socket_serv }}/socket.io/socket.io.js"></script>
     {{ HtmlHelper.importJs("require") }}
@@ -15,11 +15,20 @@
 
     <meta name="viewport" content="user-scalable=no, width=device-width,
       initial-scale=0.5, minimum-scale=0.5, maximum-scale=0.5" />
+
+
+    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">#}
+    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">#}
+    {#<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>#}
+    <link rel="stylesheet" href="/css/purecss.css" />
     <link rel="stylesheet/less" type="text/css" href="/css/default.less" />
     <link rel="stylesheet" type="text/css" href="/css/fullcalendar.css" />
     <link rel="stylesheet/less" type="text/css" href="/Apps/Common/Css/progress_bar.less" />
     <link rel="stylesheet/less" type="text/css" href="/Apps/Common/Css/loading_screen.less" />
+
     <link rel="stylesheet/less" type="text/css" href="/Apps/Common/Css/main.less" />
+
+
 </head>
 <body>
 <div id="flash_shower">

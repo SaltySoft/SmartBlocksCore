@@ -345,7 +345,17 @@ define([
                                     if (block.get("main")) {
                                         console.log(block.get("name"), " has a main");
                                         require([block.get("main")], function (main) {
-                                            main.init();
+                                            if (main) {
+                                                if (main.init) {
+                                                    main.init();
+                                                }
+                                                if (main.methods) {
+                                                    SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
+                                                }
+                                            }
+
+
+
                                             processed_blocks++;
                                             if (processed_blocks >= blocks_count) {
                                                 SmartBlocks.events.trigger("start_solution");
