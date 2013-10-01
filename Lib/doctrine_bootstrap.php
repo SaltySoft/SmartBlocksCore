@@ -25,7 +25,8 @@ use Doctrine\Common\ClassLoader,
     Doctrine\ORM\EntityManager,
     Doctrine\Common\Cache\ApcCache;
 
-try {
+try
+{
 
     $plugins_array = MuffinApplication::getPlugins();
     require_once ROOT . DS . "Lib" . DS . "Vendors" . DS . "vendor" . DS . "doctrine-common" . DS . "lib" . DS . "Doctrine" . DS . "Common" . DS . "ClassLoader.php";
@@ -41,9 +42,13 @@ try {
     $classLoader = new \Doctrine\Common\ClassLoader(null, ROOT . DS . 'App' . DS . "Models");
     $classLoader->register();
 
-    foreach ($plugins_array as $plugin) {
-        $classLoader = new \Doctrine\Common\ClassLoader($plugin, ROOT.DS."Plugins".DS.$plugin.DS."App".DS."Models");
-        $classLoader->register();
+    foreach ($plugins_array as $plugin)
+    {
+        if (file_exists(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models"))
+        {
+            $classLoader = new \Doctrine\Common\ClassLoader($plugin, ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models");
+            $classLoader->register();
+        }
     }
 
 
@@ -53,12 +58,15 @@ try {
 // Set up caches
     $config = new Configuration;
 
-    $entity_driver_folders = array(ROOT . DS . "App".DS."Models");
+    $entity_driver_folders = array(ROOT . DS . "App" . DS . "Models");
 
 
-
-    foreach ($plugins_array as $plugin) {
-        $entity_driver_folders[] = ROOT.DS."Plugins".DS.$plugin.DS."App".DS."Models";
+    foreach ($plugins_array as $plugin)
+    {
+        if (file_exists(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models"))
+        {
+            $entity_driver_folders[] = ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models";
+        }
     }
     $driverImpl = $config->newDefaultAnnotationDriver($entity_driver_folders);
     $config->setMetadataDriverImpl($driverImpl);
@@ -67,11 +75,13 @@ try {
     $config->setProxyDir(ROOT . DS . "Tmp" . DS . 'Proxies');
     $config->setProxyNamespace('Proxies');
 
-    if (!defined("CACHE_PREFIX")) {
+    if (!defined("CACHE_PREFIX"))
+    {
         define("CACHE_PREFIX", "your_app_name");
     }
 
-    if (extension_loaded("apc")) {
+    if (extension_loaded("apc"))
+    {
         $cache = new ApcCache();
         $cache->setNamespace(CACHE_PREFIX);
         $config->setQueryCacheImpl($cache);
@@ -81,11 +91,16 @@ try {
 
 // Database connection information
     $dbc = new \DbConfig();
-    if (ENV == 0) {
+    if (ENV == 0)
+    {
         $dbinfos = $dbc->dev;
-    } else if (ENV == 1) {
+    }
+    else if (ENV == 1)
+    {
         $dbinfos = $dbc->test;
-    } else {
+    }
+    else
+    {
         $dbinfos = $dbc->prod;
     }
     $connectionOptions = array(
@@ -99,6 +114,7 @@ try {
 // Create EntityManager
     $em = EntityManager::create($connectionOptions, $config);
     $GLOBALS["em"] = EntityManager::create($connectionOptions, $config);
-} catch (Exception $e) {
+} catch (Exception $e)
+{
     echo $e->getMessage();
 }

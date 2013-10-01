@@ -1,24 +1,28 @@
 <?php
 require_once("../config.php");
 require_once(ROOT . DS . "Lib/shared.php");
-require_once ROOT.DS."Lib".DS."Vendors".DS."vendor".DS."doctrine-common".DS."lib".DS."Doctrine".DS."Common".DS."ClassLoader.php";
+require_once ROOT . DS . "Lib" . DS . "Vendors" . DS . "vendor" . DS . "doctrine-common" . DS . "lib" . DS . "Doctrine" . DS . "Common" . DS . "ClassLoader.php";
 
 $location = "../../Lib/Vendors/";
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', ROOT.DS."Lib".DS."Vendors");
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', ROOT . DS . "Lib" . DS . "Vendors");
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL', $location.'vendor/doctrine-dbal/lib');
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL', $location . 'vendor/doctrine-dbal/lib');
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common', $location.'/vendor/doctrine-common/lib');
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common', $location . '/vendor/doctrine-common/lib');
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader('Symfony',ROOT.DS.'Lib'.DS.'Vendors'.DS.'vendor');
+$classLoader = new \Doctrine\Common\ClassLoader('Symfony', ROOT . DS . 'Lib' . DS . 'Vendors' . DS . 'vendor');
 $classLoader->register();
-$classLoader = new \Doctrine\Common\ClassLoader(null, ROOT.DS.'App'.DS."Models");
+$classLoader = new \Doctrine\Common\ClassLoader(null, ROOT . DS . 'App' . DS . "Models");
 $classLoader->register();
 
 $plugins_array = MuffinApplication::getPlugins();
-foreach ($plugins_array as $plugin) {
-    $classLoader = new \Doctrine\Common\ClassLoader($plugin, ROOT.DS."Plugins".DS.$plugin.DS."App".DS."Models");
-    $classLoader->register();
+foreach ($plugins_array as $plugin)
+{
+    if (file_exists(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models"))
+    {
+        $classLoader = new \Doctrine\Common\ClassLoader($plugin, ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models");
+        $classLoader->register();
+    }
 }
 $classLoader = new \Doctrine\Common\ClassLoader('Proxies', __DIR__);
 $classLoader->register();
@@ -28,12 +32,15 @@ $config = new \Doctrine\ORM\Configuration();
 $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache);
 //$driverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver(ROOT.DS."App".DS."Drivers");
 
-$entity_driver_folders = array(ROOT . DS . "App".DS."Models");
+$entity_driver_folders = array(ROOT . DS . "App" . DS . "Models");
 
 
-
-foreach ($plugins_array as $plugin) {
-    $entity_driver_folders[] = ROOT.DS."Plugins".DS.$plugin.DS."App".DS."Models";
+foreach ($plugins_array as $plugin)
+{
+    if (file_exists(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models"))
+    {
+        $entity_driver_folders[] = ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Models";
+    }
 }
 
 $driverImpl = $config->newDefaultAnnotationDriver($entity_driver_folders);
