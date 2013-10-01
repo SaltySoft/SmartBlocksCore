@@ -10,6 +10,7 @@ define([
 ], function ($, _, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
 
     var temp = {};
+    var init_list = [];
 
     var SmartBlocks = {
         Url: {
@@ -343,25 +344,32 @@ define([
                                 for (var k in blocks.models) {
                                     var block = blocks.models[k];
                                     if (block.get("main")) {
-                                        console.log(block.get("name"), " has a main");
-                                        require([block.get("main")], function (main) {
-                                            if (main) {
-                                                if (main.init) {
-                                                    main.init();
+                                        (function (block) {
+                                            require([block.get("main")], function (main) {
+                                                if (main) {
+                                                    if (main.init) {
+                                                        init_list.push(main);
+                                                    }
+                                                    if (main.methods) {
+                                                        SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
+                                                        console.log(block.get("name") + " has methods", main.methods);
+                                                    }
                                                 }
-                                                if (main.methods) {
-                                                    SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
+
+
+
+                                                processed_blocks++;
+                                                if (processed_blocks >= blocks_count) {
+                                                    SmartBlocks.events.trigger("start_solution");
+                                                    SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
+
+                                                    for (var k in init_list) {
+                                                        init_list[k].init();
+                                                    }
                                                 }
-                                            }
+                                            });
+                                        })(block);
 
-
-
-                                            processed_blocks++;
-                                            if (processed_blocks >= blocks_count) {
-                                                SmartBlocks.events.trigger("start_solution");
-                                                SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
-                                            }
-                                        });
                                     } else {
                                         processed_blocks++;
                                         if (processed_blocks >= blocks_count) {
