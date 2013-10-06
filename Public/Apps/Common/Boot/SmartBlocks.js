@@ -6,7 +6,8 @@ define([
     'UserModel',
     "LoadingScreen",
     "UsersCollection",
-    "Apps/UserRequester/app"
+    "Apps/UserRequester/app",
+    'amplify'
 ], function ($, _, Backbone, sb_basics, User, LoadingScreen, UsersCollection, UserRequester) {
 
     var temp = {};
@@ -27,7 +28,6 @@ define([
                             }
                             if (main.methods) {
                                 SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
-                                console.log(block.get("name") + " has methods", main.methods);
                             }
                         }
 
@@ -52,6 +52,98 @@ define([
                 }
             }
         }
+    }
+
+    function load_blocks() {
+        SmartBlocks.Data.blocks.fetch({
+            success: function () {
+                SmartBlocks.Methods.continueMainLoading(1, "Loading config");
+                amplify.store("sb.data.blocks", SmartBlocks.Data.blocks.toArray());
+                load_config();
+            },
+            error: function () {
+                SmartBlocks.Methods.continueMainLoading(1, "Loading config");
+                SmartBlocks.Data.blocks = new SmartBlocks.Collections.Blocks(amplify.store("sb.data.blocks"));
+                load_config();
+            }
+        });
+    }
+
+    function load_config() {
+        SmartBlocks.Methods.continueMainLoading(1, "Loading config");
+        $.ajax({
+            url: "/Configs/front_end_config",
+            success: function (data, status) {
+                SmartBlocks.Config = data;
+                amplify.store("sb.config", data);
+                after_config();
+            },
+            error: function () {
+                SmartBlocks.Config = amplify.store("sb.config");
+                after_config();
+            }
+        });
+    }
+
+    function after_config() {
+        var blocks = SmartBlocks.Data.blocks;
+        SmartBlocks.Methods.count = 0;
+        for (var k in blocks.models) {
+            var block = blocks.models[k];
+            var types = block.get("types");
+            SmartBlocks.Methods.count += types != null ? types.length : 0;
+        }
+        SmartBlocks.Methods.processed = 0;
+        SmartBlocks.Blocks = {};
+        for (var k in blocks.models) {
+            var block = blocks.models[k];
+            var types = block.get("types");
+
+            SmartBlocks.Blocks[block.get("name")] = {
+                Models: {},
+                Collections: {},
+                Data: {}
+            };
+            for (var t in types) {
+                var type = types[t];
+                SmartBlocks.Methods.addType(type, block);
+            }
+        }
+
+        if ("WebSocket" in window) {
+            if (window.io) {
+
+                var socket = io.connect("http://" + SmartBlocks.Config.server_name + ":10001");
+                socket.emit('set id', SmartBlocks.Config.session_id);
+                socket.on('msg', function (data) {
+                    SmartBlocks.events.trigger("ws_notification", data);
+                });
+            }
+        }
+
+
+        //Hearbeats. If I'm living, my heart beats.
+        SmartBlocks.events.on("ws_notification", function (message) {
+            if (message.app == "heartbeat") {
+                SmartBlocks.basics.connected_users.push(message.user);
+                clearTimeout(timers[message.user.id]);
+                timers[message.user.id] = setTimeout(function () {
+                    SmartBlocks.basics.connected_users.remove(message.user);
+                }, 10000);
+            }
+        });
+
+        SmartBlocks.basics.connected_users.on("add", function () {
+            SmartBlocks.basics.connected_users.trigger("change");
+        });
+
+        SmartBlocks.basics.connected_users.on("remove", function () {
+            SmartBlocks.basics.connected_users.trigger("change");
+        });
+
+        setInterval(function () {
+            //SmartBlocks.heartBeat(current_user);
+        }, 5000);
     }
 
     var SmartBlocks = {
@@ -207,81 +299,13 @@ define([
                 SmartBlocks.Data.apps.fetch({
                     success: function () {
                         SmartBlocks.Methods.continueMainLoading(1, "Loading blocks");
-                        SmartBlocks.Data.blocks.fetch({
-                            success: function () {
-                                SmartBlocks.Methods.continueMainLoading(1, "Loading config");
-                                $.ajax({
-                                    url: "/Configs/front_end_config",
-                                    success: function (data, status) {
-                                        SmartBlocks.Methods.continueMainLoading(1, "Loading data");
-                                        SmartBlocks.Config = data;
-                                        var blocks = SmartBlocks.Data.blocks;
-                                        SmartBlocks.Methods.count = 0;
-                                        for (var k in blocks.models) {
-                                            var block = blocks.models[k];
-                                            var types = block.get("types");
-                                            SmartBlocks.Methods.count += types != null ? types.length : 0;
-                                        }
-                                        SmartBlocks.Methods.processed = 0;
-                                        SmartBlocks.Blocks = {};
-                                        for (var k in blocks.models) {
-                                            var block = blocks.models[k];
-                                            var types = block.get("types");
-
-                                            SmartBlocks.Blocks[block.get("name")] = {
-                                                Models: {},
-                                                Collections: {},
-                                                Data: {}
-                                            };
-                                            for (var t in types) {
-                                                var type = types[t];
-                                                SmartBlocks.Methods.addType(type, block);
-                                            }
-                                        }
-
-                                        if ("WebSocket" in window) {
-                                            if (window.io) {
-                                                console.log(io);
-                                                var socket = io.connect("http://" + SmartBlocks.Config.server_name + ":10001");
-                                                socket.emit('set id', SmartBlocks.Config.session_id);
-                                                socket.on('msg', function (data) {
-                                                    SmartBlocks.events.trigger("ws_notification", data);
-                                                });
-                                            }
-                                        }
-
-
-                                        //Hearbeats. If I'm living, my heart beats.
-                                        SmartBlocks.events.on("ws_notification", function (message) {
-                                            if (message.app == "heartbeat") {
-                                                SmartBlocks.basics.connected_users.push(message.user);
-                                                clearTimeout(timers[message.user.id]);
-                                                timers[message.user.id] = setTimeout(function () {
-                                                    SmartBlocks.basics.connected_users.remove(message.user);
-                                                }, 10000);
-                                            }
-                                        });
-
-                                        SmartBlocks.basics.connected_users.on("add", function () {
-                                            SmartBlocks.basics.connected_users.trigger("change");
-                                        });
-
-                                        SmartBlocks.basics.connected_users.on("remove", function () {
-                                            SmartBlocks.basics.connected_users.trigger("change");
-                                        });
-
-                                        setInterval(function () {
-                                            //SmartBlocks.heartBeat(current_user);
-                                        }, 5000);
-                                    },
-                                    error: function () {
-
-                                    }
-                                });
-
-
-                            }
-                        });
+                        amplify.store("sb.data.apps", SmartBlocks.Data.apps.toArray());
+                        load_blocks();
+                    },
+                    error: function () {
+                        SmartBlocks.Methods.continueMainLoading(1, "Loading blocks");
+                        SmartBlocks.Data.apps = new SmartBlocks.Collections.Applications(amplify.store("sb.data.apps"));
+                        load_blocks();
                     }
                 });
 
@@ -381,12 +405,14 @@ define([
                             SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
                                 success: function () {
                                     SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
+                                    amplify.store("block_data-" + block.get("token"), SmartBlocks.Blocks[block.get("name")].Data[type.plural].toArray());
                                     if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                         init_blocks();
                                     }
                                 },
                                 error: function () {
                                     SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
+                                    SmartBlocks.Blocks[block.get("name")].Data[type.plural] =  new SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name](amplify.store("block_data-" + block.get("token")));
                                     if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                         init_blocks();
                                     }

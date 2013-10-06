@@ -53,6 +53,11 @@ class Template
         $this->variables[$name] = $value;
     }
 
+    public function get($name)
+    {
+        return (isset($this->variables[$name]) ? $this->variables[$name] : null);
+    }
+
     function get_var_array()
     {
         return $this->variables;

@@ -84,6 +84,12 @@ define([
 
                     user.fetch({
                         success: function () {
+
+                            amplify.store("current_user", user.attributes);
+                            callback(user);
+                        },
+                        error: function () {
+                            user = new User(amplify.store("current_user"));
                             callback(user);
                         }
                     });
@@ -94,6 +100,9 @@ define([
             },
             error: function () {
                 var user = new User();
+                if (amplify.store("current_user")) {
+                    user = new User(amplify.store("current_user"));
+                }
                 callback(user);
             }
         });
