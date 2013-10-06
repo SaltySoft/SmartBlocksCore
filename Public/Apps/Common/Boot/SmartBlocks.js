@@ -12,6 +12,48 @@ define([
     var temp = {};
     var init_list = [];
 
+    function init_blocks() {
+        var blocks = SmartBlocks.Data.blocks;
+        var blocks_count = blocks.length;
+        var processed_blocks = 0;
+        for (var k in blocks.models) {
+            var block = blocks.models[k];
+            if (block.get("main")) {
+                (function (block) {
+                    require([block.get("main")], function (main) {
+                        if (main) {
+                            if (main.init) {
+                                init_list.push(main);
+                            }
+                            if (main.methods) {
+                                SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
+                                console.log(block.get("name") + " has methods", main.methods);
+                            }
+                        }
+
+
+                        processed_blocks++;
+                        if (processed_blocks >= blocks_count) {
+                            SmartBlocks.events.trigger("start_solution");
+                            SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
+
+                            for (var k in init_list) {
+                                init_list[k].init();
+                            }
+                        }
+                    });
+                })(block);
+
+            } else {
+                processed_blocks++;
+                if (processed_blocks >= blocks_count) {
+                    SmartBlocks.events.trigger("start_solution");
+                    SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
+                }
+            }
+        }
+    }
+
     var SmartBlocks = {
         Url: {
             params: []
@@ -97,7 +139,7 @@ define([
 
                     $(document).bind("keydown", function (e) {
                         if (e.keyCode != 123) { //123 == F12. This key blocks all other shortcuts when opening debug console.
-                           base.keydown_list[e.keyCode] = true;
+                            base.keydown_list[e.keyCode] = true;
 
                             var active_keys = [];
                             for (var k in base.keydown_list) {
@@ -330,60 +372,36 @@ define([
                 processed: 0
             },
             addType: function (type, block) {
-                require([type.model_location, type.collection_location], function (model, collection) {
-                    SmartBlocks.Blocks[block.get("name")].Models[type.model_name] = model;
-                    SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
-                    SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
-                    SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
-                        success: function () {
-                            SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
-                            if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
-                                var blocks = SmartBlocks.Data.blocks;
-                                var blocks_count = blocks.length;
-                                var processed_blocks = 0;
-                                for (var k in blocks.models) {
-                                    var block = blocks.models[k];
-                                    if (block.get("main")) {
-                                        (function (block) {
-                                            require([block.get("main")], function (main) {
-                                                if (main) {
-                                                    if (main.init) {
-                                                        init_list.push(main);
-                                                    }
-                                                    if (main.methods) {
-                                                        SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
-                                                        console.log(block.get("name") + " has methods", main.methods);
-                                                    }
-                                                }
-
-
-
-                                                processed_blocks++;
-                                                if (processed_blocks >= blocks_count) {
-                                                    SmartBlocks.events.trigger("start_solution");
-                                                    SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
-
-                                                    for (var k in init_list) {
-                                                        init_list[k].init();
-                                                    }
-                                                }
-                                            });
-                                        })(block);
-
-                                    } else {
-                                        processed_blocks++;
-                                        if (processed_blocks >= blocks_count) {
-                                            SmartBlocks.events.trigger("start_solution");
-                                            SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
-                                        }
+                (function (block) {
+                    require([type.model_location, type.collection_location], function (model, collection) {
+                        if (!block.get("restricted_to") || SmartBlocks.current_user.hasRight(block.get("restricted_to"))) {
+                            SmartBlocks.Blocks[block.get("name")].Models[type.model_name] = model;
+                            SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
+                            SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
+                            SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
+                                success: function () {
+                                    SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
+                                    if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
+                                        init_blocks();
+                                    }
+                                },
+                                error: function () {
+                                    SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
+                                    if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
+                                        init_blocks();
                                     }
                                 }
-
-
+                            });
+                        } else {
+                            SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
+                            if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
+                                init_blocks();
                             }
                         }
+
                     });
-                });
+                })(block);
+
             }
         }
 

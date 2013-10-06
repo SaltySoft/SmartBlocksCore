@@ -27,27 +27,31 @@ class ApplicationsController extends \Controller
         foreach ($directories as $directory)
         {
             $block_info = \BusinessManagement\SmartBlocks::loadBlockInformation($directory);
-            if (isset($block_info["apps"]) && is_array($block_info["apps"]))
+            if (!isset($block_info["restricted_to"]) || (\User::logged_in() && \User::current_user()->hasRight($block_info["restricted_to"])))
             {
-                foreach ($block_info["apps"] as $app_array)
+                if (isset($block_info["apps"]) && is_array($block_info["apps"]))
                 {
-                    if (isset($app_array["restricted_to"]))
+                    foreach ($block_info["apps"] as $app_array)
                     {
-                        if (is_object(\User::current_user()))
+                        if (isset($app_array["restricted_to"]))
                         {
-                            if (\User::current_user()->hasRight($app_array["restricted_to"]))
+                            if (is_object(\User::current_user()))
                             {
-                                $response[] = $app_array;
+                                if (\User::current_user()->hasRight($app_array["restricted_to"]))
+                                {
+                                    $response[] = $app_array;
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        $response[] = $app_array;
-                    }
+                        else
+                        {
+                            $response[] = $app_array;
+                        }
 
+                    }
                 }
             }
+
         }
 
         $this->return_json($response);

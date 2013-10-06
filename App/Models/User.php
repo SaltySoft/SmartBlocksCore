@@ -265,7 +265,7 @@ class User extends UserBase
      * @param $right_token
      * @return bool
      */
-    public function hasRight($right_token, $group_token = null)
+    public function hasRight($right_token)
     {
         $hasright = false;
         foreach ($this->rights as $right)

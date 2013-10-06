@@ -389,6 +389,6 @@ class UsersController extends Controller
 
     public function unauthorized()
     {
-        $this->json_error("403 Unauthorized",403);
+        $this->json_error("401 Unauthorized", 401);
     }
 }
