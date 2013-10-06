@@ -28,39 +28,78 @@ class BlocksController extends Controller
 
         $this->return_json($response);
     }
-//
-//    public function cachemanifest()
-//    {
-//        header('Content-Type: text/cache-manifest');
-//        $this->render = false;
-//        echo "CACHE MANIFEST";
-//
-//        $directories = \BusinessManagement\SmartBlocks::getPluginsDirectoriesName();
-//
-//        $dir = new RecursiveDirectoryIterator(".");
-//
-//// Iterate through all the files/folders in the current directory
-//        foreach(new RecursiveIteratorIterator($dir) as $file) {
-//            $info = pathinfo($file);
-//
-//            // If the object is a file
-//            // and it's not called manifest.php (this file),
-//            // and it's not a dotfile, add it to the list
-//            if ($file->IsFile()
-//                && $file != "./manifest.php"
-//                    &amp;& substr($file->getFilename(), 0, 1) != ".")
-//		{
-//            // Replace spaces with %20 or it will break
-//            echo str_replace(' ', '%20', $file) . "n";
-//
-//            // Add this file's hash to the $hashes string
-//            $hashes .= md5_file($file);
-//        }
-//}
-//
-//// Hash the $hashes string and output
-//        echo "# Hash: " . md5($hashes) . "n";
-//
-//    }
+
+    public function manifest()
+    {
+        header('Content-Type: text/cache-manifest');
+        $this->render = false;
+        echo "CACHE MANIFEST\n";
+        $hashes = "";
+        $directories = \BusinessManagement\SmartBlocks::getPluginsDirectoriesName();
+
+        foreach ($directories as $dirr)
+        {
+            $dir = new RecursiveDirectoryIterator(ROOT . DS . "Plugins" . DS . $dirr . DS . "Public");
+            foreach (new RecursiveIteratorIterator($dir) as $file)
+            {
+                $info = pathinfo($file);
+
+                if ($file->IsFile()
+                    && $file != "./manifest.php" && substr($file->getFilename(), 0, 1) != "."
+                    && (
+                        strpos($file->getFilename(), '.js') !== FALSE ||
+                            strpos($file->getFilename(), '.html') !== FALSE ||
+                            strpos($file->getFilename(), '.less') !== FALSE ||
+                            strpos($file->getFilename(), '.css') !== FALSE||
+                            strpos($file->getFilename(), '.jpeg') !== FALSE||
+                            strpos($file->getFilename(), '.png') !== FALSE||
+                            strpos($file->getFilename(), '.gif') !== FALSE||
+                            strpos($file->getFilename(), '.wav') !== FALSE||
+                            strpos($file->getFilename(), '.ttf') !== FALSE
+                    )
+                )
+                {
+                    $file_name = str_replace(ROOT . DS . "Plugins" . DS . $dirr . DS . "Public", "/" . $dirr, $file);
+                    $file_name = str_replace(DS, "/", $file_name);
+                    echo str_replace(' ', '%20', $file_name) . "\n";
+
+                    $hashes .= md5_file($file);
+                }
+            }
+        }
+        $dir = new RecursiveDirectoryIterator(ROOT . DS . "Public");
+        foreach (new RecursiveIteratorIterator($dir) as $file)
+        {
+            $info = pathinfo($file);
+
+            if ($file->IsFile()
+                && $file != "./manifest.php" && substr($file->getFilename(), 0, 1) != "."
+                && (
+                    strpos($file->getFilename(), '.js') !== FALSE ||
+                        strpos($file->getFilename(), '.html') !== FALSE ||
+                        strpos($file->getFilename(), '.less') !== FALSE ||
+                        strpos($file->getFilename(), '.css') !== FALSE||
+                        strpos($file->getFilename(), '.jpeg') !== FALSE||
+                        strpos($file->getFilename(), '.png') !== FALSE||
+                        strpos($file->getFilename(), '.gif') !== FALSE||
+                        strpos($file->getFilename(), '.wav') !== FALSE||
+                        strpos($file->getFilename(), '.ttf') !== FALSE
+                )
+            )
+            {
+                $file_name = str_replace(ROOT . DS . "Public", "", $file);
+                $file_name = str_replace(DS, "/", $file_name);
+                echo str_replace(' ', '%20', $file_name) . "\n";
+
+                $hashes .= md5_file($file);
+            }
+        }
+
+        echo "NETWORK:\n*\n";
+
+        echo "# Hash: " . md5($hashes) . "\n";
+
+
+    }
 
 }

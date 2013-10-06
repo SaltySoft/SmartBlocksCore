@@ -58,11 +58,17 @@ class Controller
         {
             call_user_func_array(array($this, "before_filter"), array());
         }
+        $this->set("_socket_serv", "http://" . $_SERVER["SERVER_NAME"] . ":" . (defined("NODE_PORT") ? NODE_PORT : "8899"));
     }
 
     function set($name, $value)
     {
         $this->_template->set($name, $value);
+    }
+
+    public function get($name)
+    {
+        $this->_template->get($name);
     }
 
     function get_var_array()
@@ -173,7 +179,6 @@ class Controller
         //WebSockets
 
         $this->set("_session_id", MuffinApplication::getSessionId());
-        $this->set("_socket_serv", "http://" . $_SERVER["SERVER_NAME"] . ":" . (defined("NODE_PORT") ? NODE_PORT : "8899"));
 
         if ($this->rendered)
         {
