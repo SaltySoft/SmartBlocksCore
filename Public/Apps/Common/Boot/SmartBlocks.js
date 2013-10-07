@@ -360,6 +360,7 @@ define([
                         })[0];
 
                         if (app) {
+                            console.log(app);
                             app = SmartBlocks.Data.apps.get(app.get('token'));
                             SmartBlocks.entry_app = app;
                             SmartBlocks.Methods.setApp(SmartBlocks.entry_app);
