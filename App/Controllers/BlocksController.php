@@ -29,6 +29,31 @@ class BlocksController extends Controller
         $this->return_json($response);
     }
 
+    public function style_list()
+    {
+        $response = array();
+        $kernel_info = \BusinessManagement\SmartBlocks::loadBlockInformation("Kernel", true);
+        $response[] = '/Apps/Common/Css/main.less';
+
+        $directories = \BusinessManagement\SmartBlocks::getPluginsDirectoriesName();
+
+        foreach ($directories as $directory)
+        {
+            if (file_exists(ROOT . DS . "Plugins" . DS . $directory . DS . "Public" . DS . "main.less"))
+            {
+                $response[] = '/' .$directory . '/main.less';
+            }
+        }
+
+        $this->render = false;
+        header("Content-Type: text/css");
+
+        foreach ($response as $r)
+        {
+            echo '@import "' . $r . '";'."\n";
+        }
+    }
+
     public function manifest()
     {
         header('Content-Type: text/cache-manifest');
@@ -50,11 +75,11 @@ class BlocksController extends Controller
                         strpos($file->getFilename(), '.js') !== FALSE ||
                             strpos($file->getFilename(), '.html') !== FALSE ||
                             strpos($file->getFilename(), '.less') !== FALSE ||
-                            strpos($file->getFilename(), '.css') !== FALSE||
-                            strpos($file->getFilename(), '.jpeg') !== FALSE||
-                            strpos($file->getFilename(), '.png') !== FALSE||
-                            strpos($file->getFilename(), '.gif') !== FALSE||
-                            strpos($file->getFilename(), '.wav') !== FALSE||
+                            strpos($file->getFilename(), '.css') !== FALSE ||
+                            strpos($file->getFilename(), '.jpeg') !== FALSE ||
+                            strpos($file->getFilename(), '.png') !== FALSE ||
+                            strpos($file->getFilename(), '.gif') !== FALSE ||
+                            strpos($file->getFilename(), '.wav') !== FALSE ||
                             strpos($file->getFilename(), '.ttf') !== FALSE
                     )
                 )
@@ -78,11 +103,11 @@ class BlocksController extends Controller
                     strpos($file->getFilename(), '.js') !== FALSE ||
                         strpos($file->getFilename(), '.html') !== FALSE ||
                         strpos($file->getFilename(), '.less') !== FALSE ||
-                        strpos($file->getFilename(), '.css') !== FALSE||
-                        strpos($file->getFilename(), '.jpeg') !== FALSE||
-                        strpos($file->getFilename(), '.png') !== FALSE||
-                        strpos($file->getFilename(), '.gif') !== FALSE||
-                        strpos($file->getFilename(), '.wav') !== FALSE||
+                        strpos($file->getFilename(), '.css') !== FALSE ||
+                        strpos($file->getFilename(), '.jpeg') !== FALSE ||
+                        strpos($file->getFilename(), '.png') !== FALSE ||
+                        strpos($file->getFilename(), '.gif') !== FALSE ||
+                        strpos($file->getFilename(), '.wav') !== FALSE ||
                         strpos($file->getFilename(), '.ttf') !== FALSE
                 )
             )
