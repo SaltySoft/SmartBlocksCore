@@ -29,17 +29,18 @@ define([
                             if (main.methods) {
                                 SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
                             }
+                            SmartBlocks.Blocks[block.get("name")].Main = main;
                         }
 
 
                         processed_blocks++;
                         if (processed_blocks >= blocks_count) {
-                            SmartBlocks.events.trigger("start_solution");
                             SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
 
                             for (var k in init_list) {
                                 init_list[k].init();
                             }
+                            SmartBlocks.events.trigger("start_solution");
                         }
                     });
                 })(block);
@@ -168,8 +169,9 @@ define([
             SmartBlocks.started = false;
             SmartBlocks.events.on("start_solution", function () {
                 //Done loading everything, launching main app
+
                 if (!SmartBlocks.started) {
-                    SmartBlocks.Methods.start();
+                   SmartBlocks.Methods.start();
                     if (temp.callback) {
                         temp.callback();
                     }
@@ -337,10 +339,11 @@ define([
             },
             render: function (view) {
                 var base = this;
-                $("#content").html(view.$el);
+                $("#content").html(view);
             },
             setApp: function (app) {
                 var base = this;
+                console.log("launching", app);
                 app.launch();
 
             },
@@ -380,7 +383,7 @@ define([
                 SmartBlocks.loading_screen.setLoad(1);
                 SmartBlocks.States.main_loading = true;
 
-                SmartBlocks.Methods.render(SmartBlocks.loading_screen);
+                SmartBlocks.Methods.render(SmartBlocks.loading_screen.$el);
             },
             continueMainLoading: function (step_add, message) {
                 if (message) {

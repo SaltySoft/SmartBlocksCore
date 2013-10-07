@@ -19,17 +19,30 @@ define([
 
                 if (base.get("entry_point")) {
                     base.ready = false;
-
-                    require([base.get("entry_point")], function (View) {
-                        SmartBlocks.Methods.continueMainLoading(2);
-                        var view = new View();
-                        SmartBlocks.Methods.render(view);
-                        view.init(base);
-                        base.ready = true;
+                    var block = SmartBlocks.Data.blocks.get(base.get("block_token"));
+                    var main = SmartBlocks.Blocks[block.get('name')].Main;
+                    console.log(base.get("block_token"), block, main);
+                    if (main[base.get("entry_point")]) {
+                        main[base.get("entry_point")](base);
                         base.events.trigger("ready");
                         SmartBlocks.current_app = base;
                         base.routeit();
-                    });
+                        console.log(base);
+                    }
+                    base.ready = true;
+
+
+
+//                    require([base.get("entry_point")], function (View) {
+//                        SmartBlocks.Methods.continueMainLoading(2);
+//                        var view = new View();
+//                        SmartBlocks.Methods.render(view);
+//                        view.init(base);
+//                        base.ready = true;
+//                        base.events.trigger("ready");
+//                        SmartBlocks.current_app = base;
+//                        base.routeit();
+//                    });
                 }
             } else {
                 SmartBlocks.basics.show_message("You don't have the rights to access this app");
@@ -50,7 +63,7 @@ define([
         },
         route: function () {
             var base = this;
-            if (SmartBlocks.current_app.get("token") == base.get("token")) {
+            if (!SmartBlocks.current_app || SmartBlocks.current_app.get("token") == base.get("token")) {
                 base.routeit();
             }
             base.current_url = SmartBlocks.Url.full;

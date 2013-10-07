@@ -23,7 +23,8 @@ class BlocksController extends Controller
         foreach ($directories as $directory)
         {
             $block_info = \BusinessManagement\SmartBlocks::loadBlockInformation($directory);
-            $response[] = $block_info;
+            if (is_array($block_info))
+                $response[] = $block_info;
         }
 
         $this->return_json($response);
