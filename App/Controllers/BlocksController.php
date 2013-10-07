@@ -42,7 +42,7 @@ class BlocksController extends Controller
         {
             if (file_exists(ROOT . DS . "Plugins" . DS . $directory . DS . "Public" . DS . "main.less"))
             {
-                $response[] = '/' .$directory . '/main.less';
+                $response[] = '/' . $directory . '/main.less';
             }
         }
 
@@ -51,7 +51,7 @@ class BlocksController extends Controller
 
         foreach ($response as $r)
         {
-            echo '@import "' . $r . '";'."\n";
+            echo '@import "' . $r . '";' . "\n";
         }
     }
 
@@ -62,7 +62,7 @@ class BlocksController extends Controller
         echo "CACHE MANIFEST\n";
         $hashes = "";
         $directories = \BusinessManagement\SmartBlocks::getPluginsDirectoriesName();
-
+        echo "\n".'/Blocks/style_list' . "\n";
         foreach ($directories as $dirr)
         {
             $dir = new RecursiveDirectoryIterator(ROOT . DS . "Plugins" . DS . $dirr . DS . "Public");

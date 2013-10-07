@@ -10,8 +10,7 @@ var sb_paths = {
     SmartBlocks: "/javascript/SmartBlocks",
 
     UserModel: "/Apps/Common/Models/User",
-    JobModel: "/Apps/Common/Models/Job",
-    GroupModel: "/Apps/Common/Models/Group",
+
     UsersCollection: "/Apps/Common/Collections/Users",
     JobsCollection: "/Apps/Common/Collections/Jobs",
     GroupsCollection: "/Apps/Common/Collections/Groups",
