@@ -10,22 +10,11 @@ var sb_paths = {
     SmartBlocks: "/javascript/SmartBlocks",
 
     UserModel: "/Apps/Common/Models/User",
-    JobModel: "/Apps/Common/Models/Job",
-    GroupModel: "/Apps/Common/Models/Group",
     UsersCollection: "/Apps/Common/Collections/Users",
-    JobsCollection: "/Apps/Common/Collections/Jobs",
-    GroupsCollection: "/Apps/Common/Collections/Groups",
 
-    TabView: "/Apps/Common/Views/TabView",
-    TabsTemplate: "/Apps/Common/Templates/tabs.html",
-
-    SearchResultsTemplate: '/Apps/Common/Templates/search_results.html',
-    SelectionTemplate: '/Apps/Common/Templates/selection.html',
     ContextMenuView: "/Apps/Common/Views/ContextMenu",
 
     Class: '/Apps/Common/Useful/Class',
-    ColorPicker: '/javascript/colorpicker',
-    TextEditorView : "/Apps/Common/Views/TextEditor",
 
     jDeepCopy: "/javascript/jqueryDeepCopy",
     amplify_lib: "/javascript/amplify.min",

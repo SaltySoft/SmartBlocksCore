@@ -1,5 +1,0 @@
-<ul class="search_results <%= type %>_search_results">
-    <% _.each(results, function (result) { %>
-        <li class="search_result <%= type %>_search_result add_to_selection" data-id="<%= result.get('id') %>"><a href="javascript:void(0);" ><%= result.get(field) %></a></li>
-    <% }); %>
-</ul>
