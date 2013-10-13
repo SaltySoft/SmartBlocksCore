@@ -261,6 +261,7 @@ define([
                     });
 
                     $(document).bind("keyup", function (e) {
+
                         base.keydown_list[e.keyCode] = false;
                     });
                 },
