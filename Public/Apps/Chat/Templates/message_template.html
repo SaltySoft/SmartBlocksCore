@@ -1,0 +1,8 @@
+<div>
+    <% if (show_sender) { %>
+    <div class="sender"><%= sender.username %> dit:</div>
+    <% } %>
+    <div class="message">
+    <%= message.content !== undefined ? message.content : message.get("content") %>
+    </div>
+</div>

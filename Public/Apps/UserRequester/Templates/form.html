@@ -1,0 +1,20 @@
+<div class="user_r_form_container">
+    <h3><%= data.title %></h3>
+
+    <div class="message">
+        <%= data.form_text %>
+    </div>
+    <form action="javascript:void(0);" class="pure-form pure-form-aligned form">
+        <% for (var k in data.fields) { %>
+        <div class="pure-control-group">
+            <label for="user_req_field_<%= data.fields[k].name %>"><%= data.fields[k].label %></label>
+            <input id="user_req_field_<%= data.fields[k].name %>" type="<%= data.fields[k].type %>"
+                   name="<%= data.fields[k].name %>"/>
+        </div>
+        <% } %>
+        <div class="pure-controls">
+            <button class="pure-button pure-button-primary validate_button">Answer</button>
+            <a href="javascript:void(0);" class="cancel_button pure-button">Cancel</a>
+        </div>
+    </form>
+</div>

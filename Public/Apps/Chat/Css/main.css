@@ -1,0 +1,200 @@
+.k_chat_messages_list {
+    background-color: #f0f3f7;
+    height: 400px;
+    overflow: auto;
+    margin-bottom: 10px;
+    border: 1px solid #aaaaaa;
+}
+
+.k_chat_inputs {
+    float:right;
+}
+
+.k_chat_message {
+    margin: 12px;
+    padding: 10px;
+    padding-top: -10px;
+    position: relative;
+    z-index: 101;
+    text-align: justify;
+}
+
+.k_chat_message_cu {
+    /*margin-left: 0px;*/
+    background-color: #44cc67;
+    margin-right: 30px;
+    border-left: none;
+}
+
+.k_chat_message_cu::before {
+    background-color: #44cc67;
+    /*box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );*/
+    content: "\00a0";
+    display: block;
+    height: 20px;
+    left: -13px;
+    position: relative;
+    top: 0px;
+    transform: rotate(135deg);
+    -ms-transform: rotate(135deg); /* IE 9 */
+    -webkit-transform: rotate(135deg); /* Safari and Chrome */
+    -o-transform: rotate(135deg); /* Opera */
+    -moz-transform: rotate(135deg); /* Firefox */
+    width:  20px;
+    z-index: 10;
+    transform: skew(-40deg,-0deg);
+    -ms-transform: skew(-40deg,-0deg); /* IE 9 */
+    -webkit-transform: skew(-40deg,-0deg); /* Safari and Chrome */
+    -o-transform: skew(-40deg,-0deg); /* Opera */
+    -moz-transform: skew(-40deg,-0deg); /* Firefox */
+}
+
+.k_chat_message_ou {
+    /*margin-right: 0px;*/
+    background-color: #fae393;
+    margin-left: 30px;
+    border-right: none;
+}
+
+.k_chat_message_ou::before {
+    background-color: #fae393;
+    /*background-color: red;*/
+    /*box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );*/
+    content: "\00a0";
+    display: block;
+    height: 20px;
+    right: -399px;
+    position: relative;
+    top: 0px;
+    transform: rotate(135deg);
+    -ms-transform: rotate(135deg); /* IE 9 */
+    -webkit-transform: rotate(135deg); /* Safari and Chrome */
+    -o-transform: rotate(135deg); /* Opera */
+    -moz-transform: rotate(135deg); /* Firefox */
+    width:  20px;
+    z-index: 10;
+    transform: skew(40deg,-0deg);
+    -ms-transform: skew(40deg,-0deg); /* IE 9 */
+    -webkit-transform: skew(40deg,-0deg); /* Safari and Chrome */
+    -o-transform: skew(40deg,-0deg); /* Opera */
+    -moz-transform: skew(40deg,-0deg); /* Firefox */
+}
+
+.k_chat_discussion_description {
+    height: 400px;
+    float: left;
+    background-color: #f0f3f7;
+    width: 295px;
+    overflow: auto;
+    border: 1px solid #aaaaaa;
+    margin-right: 17px;
+}
+
+.k_chat_send_message_input {
+    width: 336px;
+    height: 93px;
+    resize: none;
+    display: block;
+    float: left;
+    margin-top: 20px;
+    margin-right: 5px;
+    font-family: Arial;
+}
+
+.k_chat_send_message_button {
+    width: 140px;
+    display: block;
+    float: right;
+    height: 100px;
+    margin-right: 0px;
+}
+
+.k_chat_discussion_selector
+{
+    border-bottom: 1px solid #aaaaaa;
+    float: left;
+}
+
+.k_chat_discussion_selector_link {
+    width: 150px;
+    padding-left: 20px !important;
+    color: #000000;
+
+    /* Firefox */
+    -moz-transition: all 100ms ease-in;
+    /* WebKit */
+    -webkit-transition: all 100ms ease-in;
+    /* Opera */
+    -o-transition: all 100ms ease-in;
+    /* Standard */
+    transition: all 100ms ease-in;
+}
+
+.k_chat_discussion_selector a,.k_chat_discussion_selector .k_chat_discussion_action_button {
+    height: 50px;
+    padding: 5px;
+    display: block;
+    line-height: 50px;
+    float: left;
+    /* Firefox */
+    -moz-transition: all 100ms ease-in;
+    /* WebKit */
+    -webkit-transition: all 100ms ease-in;
+    /* Opera */
+    -o-transition: all 100ms ease-in;
+    /* Standard */
+    transition: all 100ms ease-in;
+}
+
+
+
+.k_chat_discussion_selector a {
+    text-decoration: none;
+}
+
+.k_chat_discussion_selector a:hover {
+    background-color: rgba(110, 144, 254, 0.4);
+    color: white;
+    /* Firefox */
+    -moz-transition: all 100ms ease-in;
+    /* WebKit */
+    -webkit-transition: all 100ms ease-in;
+    /* Opera */
+    -o-transition: all 100ms ease-in;
+    /* Standard */
+    transition: all 100ms ease-in;
+}
+
+.k_chat_discussion_selector .k_chat_discussion_action_button {
+    width: 50px;
+    text-align: center;
+}
+
+
+
+.k_chat_main_container {
+    position: absolute;
+    background-color: white;
+    top:60px;
+    left: 100px;
+    width: 800px;
+    /*box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.5);*/
+    border: 1px grey solid;
+    padding: 20px;
+}
+
+.close_window_link {
+    float: right;
+    height: 16px;
+}
+
+.k_chat_message_header {
+    margin-top: -20px;
+    position: relative;
+    z-index: 103;
+}
+
+.k_chat_discussion_creation_button {
+    float: left;
+    margin-top: 77px;
+}

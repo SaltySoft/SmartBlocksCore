@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<dictionary language="fr_FR">
+    <keyword value="greetings">
+        Bonjour
+    </keyword>
+    <keyword value="afw_pres">
+            WebMuffin est une bibliothèque PHP respectant
+            le modèle MVC, qui vous permet de créer rapidement et simplement vos applications web.
+    </keyword>
+</dictionary>

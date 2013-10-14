@@ -1,0 +1,13 @@
+<% _.each(available_discussions, function (discussion) { %>
+<div class="k_chat_discussion_selector">
+    <div class="chat_discussion_notif" data-discussion_id="<%= discussion.get('id') %>">New</div>
+    <a href="javascript:void(0);" class="k_chat_discussion_selector_link" data-id="<%= discussion.get('id') %>"><%= discussion.get('name') %></a>
+    <% if (discussion.get('creator') && current_user.get('id') == discussion.get('creator').id) { %>
+    <a href="javascript:void(0);" data-discussion_id="<%= discussion.get('id') %>" class="k_chat_discussion_action_button k_chat_discussion_deletion_button"><img src="/images/icons/cross.png"></a>
+    <% } else { %>
+    <div class="k_chat_discussion_action_button"></div>
+    <% } %>
+    <a href="javascript:void(0);" class="k_chat_discussion_action_button k_chat_discussion_unsubscribe" data-discussion_id="<%= discussion.get('id') %>"><img src="/images/icons/door_out.png"></a>
+    <div style="clear: both"></div>
+</div>
+<% }); %>

@@ -1,0 +1,9 @@
+<div>
+    Cette application permet de discuter avec les autres utilisateurs du site. Il vous est possible de créer des fils de
+    discussion
+</div>
+<% _.each(discussions, function (discussion) { %>
+<div>
+    <a href="javascript:void(0);" class="k_chat_discussion_selector" data-id="<%= discussion.get('id') %>"><%= discussion.get('name') %></a>
+</div>
+<% }); %>

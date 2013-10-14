@@ -1,0 +1,147 @@
+.chat_main_view {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    /*width: 100%;*/
+    height: 35px;
+    z-index: 100;
+
+}
+
+.chat_pane {
+    float: right;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}
+
+.discussions_container {
+    position: absolute;
+    bottom:0px;
+    right: 200px;
+    width: 100%;
+}
+
+.contact_list_container {
+    padding: 5px;
+    background: white;
+    height: 300px;
+    display: none;
+    border: 1px #d3d3d3 solid;
+}
+
+.contact_list_button {
+    width: 200px;
+    background: #d3d3d3;
+}
+
+/**
+* contact item
+*/
+
+.chat_contact_item {
+    height: 20px;
+
+
+}
+
+.chat_contact_item a {
+    color: white;
+    background: #d3d3d3;
+    line-height: 20px;
+    color: white;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+}
+
+.chat_contact_item a:hover {
+    color: #b8b8b8;
+    background: #ededed;
+}
+
+.chat_contact_item .status {
+    width: 20px;
+    height: 20px;
+    background: darkgray;
+    float: left;
+    margin-right: 15px;
+    display: block;
+}
+
+.chat_contact_item .status.online {
+    background: #00c90b;
+}
+
+/**
+* Discussion
+*/
+
+.chat_discussion_list {
+
+    width: 100%;
+}
+
+.chat_discussion_view {
+    float: right;
+    width: 200px;
+    height:1px;
+}
+
+.discussion_button {
+    width: 200px;
+    position: absolute;
+    bottom: 0px;
+}
+
+.discussion {
+    height: 300px;
+    position: absolute;
+    bottom: 30px;
+    display: none;
+
+    background: white;
+    border: 1px #dddddd solid;
+    width: 200px;
+}
+
+.discussion_input {
+    position: absolute;
+    bottom: -1px;
+    width: 200px;
+    border: 1px #dddddd solid;
+    left: -1px;
+}
+
+.messages_list_container {
+    padding: 5px;
+    height: 241px;
+    overflow-y: auto;
+}
+
+.discussion_header {
+    padding: 5px;
+    background: #d3d3d3;
+    height: 20px;
+}
+
+.discussion_header .remove_button {
+    float: right;
+    display: block;
+}
+.sender {
+    font-size: small;
+    color: white;
+    background:rgba(108, 146, 184, 0.75);
+    border-radius: 5px;
+    padding: 3px;
+    float:left;
+}
+
+.message {
+    clear: left;
+}
+
+.participants {
+    color: white;
+}

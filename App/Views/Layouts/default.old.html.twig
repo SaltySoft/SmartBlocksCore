@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="fr" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>My website</title>
+    {{ HtmlHelper.importCss("default") }}
+    {#{{ HtmlHelper.importJs("jquery-1.9.1") }}#}
+    {#{{ HtmlHelper.importJs("jquery-ui-1.10.1.min") }}#}
+    {{ HtmlHelper.importJs("require") }}
+
+    {#{{ HtmlHelper.importJs("underscore") }}#}
+    {#{{ HtmlHelper.importJs("backbone") }}#}
+
+    {#{{ HtmlHelper.importJs("default") }}#}
+    <link rel="icon" type="image/jpg" href="/images/favicon.png"/>
+    {{ _content_for_header_|raw }}
+    <style type="text/css">
+        #logo {
+            line-height: 75px;
+            text-decoration: none;
+            font-size: xx-large;
+            color: black;
+            font-style: italic;
+        }
+    </style>
+    <script type="text/javascript">
+        {#{% if _socket_serv is defined %}#}
+            {#var websocket = "";#}
+            {#$(document).ready(function () {#}
+                 {#websocket = new WebSocket("{{ _socket_serv }}", "muffin-protocol");#}
+                {#server_handshake(websocket, "{{ _session_id }}");#}
+            {#});#}
+        {#{% endif %}#}
+        {#SmartBlocks.setUserId({% if user %}{{ user.getId  }}{% else %}0{% endif %});#}
+
+
+
+    </script>
+</head>
+<body>
+
+<div id="flash_shower">
+    <div id="flash_message"></div>
+    <div style="clear:both"></div>
+</div>
+
+<div id="loader"></div>
+<div id="container">
+    <div id="inner_container">
+        <div id="header">
+            <a href="/" title="Home" id="logo">
+                <img src="/images/logo.png" style="float: left; margin: 3px; width: 100px;"/>
+                WebMuffin
+            </a>
+
+            <div id="nav">
+
+            </div>
+        </div>
+        {% if user_set %}
+            Logged in as {{ user.name }} <a href="/Users/logout">Log out</a>
+        {% else %}
+            <a href="/Users/login_form">Log in</a> - <a href="/Users/add">Register</a>
+        {% endif %}
+
+        <div id="content">
+            {{ _content_for_layout_|raw }}
+        </div>
+        <div id="footer">
+            <a id="link2navFooter" href="/contact">Contact us</a><br/>
+            <a href="/set_locale/fr-FR">Français</a>
+            <a href="/set_locale/en-US">English</a>
+        </div>
+    </div>
+</div>
+{% if flash != "" %}
+    <script type="text/javascript">
+        show_message("{{ flash }}");
+
+
+    </script>
+{% endif %}
+{% if muffin_errors is defined %}
+    <style type="text/css">
+        #muffin_errors {
+            height: 60px;
+            position: fixed;
+            bottom: 0px;
+            margin-bottom: -66px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 3px;
+            border-top: 10px rgba(255, 255, 0, 0.5) solid;
+            -webkit-transition: all 0.5s linear;
+            transition: all 0.5s linear;
+            cursor: default;
+            overflow: auto;
+        }
+
+        #muffin_errors:hover {
+            margin-bottom: 0px;
+        }
+
+        .muffin_error {
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 1);
+            float: left;
+            margin-right: 3px;
+            cursor: pointer;
+        }
+
+        .error_message {
+            background-color: rgba(255, 255, 255, 1);
+            display: none;
+            height: 50px;
+            width: 100%;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px #9f9f99 solid;
+            margin-bottom: 10px;
+        }
+
+        #error_mesages {
+            position: fixed;
+            bottom: 60px;
+            width: 100%;
+
+        }
+    </style>
+    {% if muffin_errors is defined %}
+        <div id="error_mesages">
+            {% set errornb = 0 %}
+            {% for error in muffin_errors %}
+
+                <div id="error{{ errornb }}" class="error_message">
+                    <img src="/images/dead_muffin.png" style="height: 20px;"/>
+                    {{ error.message }}<br/>
+                    <a href="javascript:void()" class="error_message_b">hide</a></div>
+                {% set errornb = errornb + 1 %}
+            {% endfor %}
+        </div>
+        <div id="muffin_errors">
+
+            <div>
+                <img src="/images/icons/cross.png"/> There were errors. Click to see their messages :
+            </div>
+            {% set errornb = 0 %}
+            {% for error in muffin_errors %}
+                <div class="muffin_error" data-error="{{ errornb }}">
+                    <b>{{ error.type }}</b>
+                </div>
+                {% set errornb = errornb + 1 %}
+            {% endfor %}
+            <script type="text/javascript">
+//                $(document).ready(function () {
+//                    $(".muffin_error").click(function () {
+//                        id = $(this).attr("data-error");
+//                        $("#error" + id).show();
+//                    });
+//                    $(".error_message_b").click(function () {
+//                        $(this).parent().hide();
+//                    });
+//                });
+            </script>
+        </div>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>

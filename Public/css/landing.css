@@ -1,0 +1,65 @@
+@font-face
+{
+    font-family: Fudd;
+    src: url(/css/Fonts/fudd.ttf);
+}
+@font-face
+{
+    font-family: Fuddi;
+    src: url(/css/Fonts/fuddi.ttf);
+}
+@font-face
+{
+    font-family: Chata;
+    src: url(/css/Fonts/La-chata-normal.ttf);
+}
+
+@font-face
+{
+    font-family: Average;
+    src: url(/css/Fonts/AverageSans-Regular.ttf);
+}
+body, h1, h2, h3, h4 {
+    font-family: sans-serif;
+}
+
+body .primary-button {
+    background: #02a6eb;
+    color: #fff;
+}
+
+.splash {
+    margin: 2em auto 0;
+    padding: 3em 0.5em;
+    background: #eee;
+}
+
+.splash-head {
+    font-size: 200%;
+    margin: 0em 0;
+    line-height: 1.2em;
+}
+.splash-subhead {
+    color: #999;
+    font-weight: 200;
+    line-height: 1.4em;
+    width: 99%;
+    font-size: 1.2em;
+    text-align: justify;
+}
+
+.small-header {
+    padding: 10px;
+    border-bottom: 2px #d3d3d3 solid;
+    display: inline-block;
+    color: darkgray;
+
+}
+
+.pure-u-2-3 {
+    width: 65%;
+}
+
+.login {
+    text-align: center;
+}

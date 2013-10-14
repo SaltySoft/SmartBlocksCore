@@ -1,0 +1,23 @@
+.user_request_notification {
+
+    padding: 10px;
+    background: #f2d859;
+    margin-bottom: 10px;
+}
+
+.user_request_notif_container {
+    position: fixed;
+    top: 20px;
+    right:20px;
+    z-index: 200;
+    width: 300px;
+}
+
+.user_r_form_container {
+    width: 500px;
+    background: white;
+    padding: 20px;
+    margin:auto;
+    margin-top: 10%;
+    text-align: center;
+}

@@ -1,0 +1,10 @@
+Tmp/*
+App/Logs/*
+Config/database.php
+.idea
+Data/Schemas/*
+Data/User_files/*
+Public/node_modules/*
+Plugins/*
+Lib/Node/node_modules/*
+Lib/Node/npm-debug.log
