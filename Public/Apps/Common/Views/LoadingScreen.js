@@ -13,14 +13,14 @@ define([
             var pb_view = new ProgressBarView();
             base.pb_view = pb_view;
             base.initiated = false;
-            
+            base.show_progress_bar = true;
         },
-        init: function (SmartBlocks) {
+        init: function (show_progress_bar) {
             var base = this;
-            base.SmartBlocks = SmartBlocks;
 
             base.render();
             base.initiated = true;
+
         },
         render: function () {
             var base = this;
@@ -30,6 +30,7 @@ define([
 
 
             base.$el.find(".loading_status").html(base.pb_view.$el);
+
             base.pb_view.init(base.SmartBlocks);
             base.setLoad(0);
 
@@ -48,6 +49,14 @@ define([
         },
         registerEvents: function () {
             var base = this;
+        },
+        hidePb: function () {
+            var base = this;
+            base.$el.find(".loading_status").hide();
+        },
+        showPb: function () {
+            var base = this;
+            base.$el.find(".loading_status").show();
         }
     });
 

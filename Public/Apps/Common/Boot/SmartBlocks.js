@@ -344,7 +344,7 @@ define([
             },
             setApp: function (app) {
                 var base = this;
-                console.log("launching", app);
+
                 app.launch();
 
             },
@@ -373,9 +373,15 @@ define([
 
 
             },
-            startMainLoading: function (message, steps) {
+            startMainLoading: function (message, steps, show_pb) {
                 if (!SmartBlocks.loading_screen) {
                     SmartBlocks.loading_screen = new LoadingScreen();
+                }
+                SmartBlocks.Methods.render(SmartBlocks.loading_screen.$el);
+                if (show_pb === false) {
+                    SmartBlocks.loading_screen.hidePb();
+                } else {
+                    SmartBlocks.loading_screen.showPb();
                 }
                 if (!SmartBlocks.loading_screen.initiated) {
                     SmartBlocks.loading_screen.init();
@@ -385,7 +391,7 @@ define([
                 SmartBlocks.loading_screen.setLoad(1);
                 SmartBlocks.States.main_loading = true;
 
-                SmartBlocks.Methods.render(SmartBlocks.loading_screen.$el);
+
             },
             continueMainLoading: function (step_add, message) {
                 if (message) {
