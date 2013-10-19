@@ -19,9 +19,9 @@ define([
         var processed_blocks = 0;
         for (var k in blocks.models) {
             var block = blocks.models[k];
-            if (block.get("main")) {
+            if (block.get("main") || true) {
                 (function (block) {
-                    require([block.get("main")], function (main) {
+                    require([block.get("name") + '/main'], function (main) {
                         if (main) {
                             if (main.init) {
                                 init_list.push(main);
