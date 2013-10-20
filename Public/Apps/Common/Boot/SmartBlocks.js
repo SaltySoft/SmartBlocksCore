@@ -19,39 +19,31 @@ define([
         var processed_blocks = 0;
         for (var k in blocks.models) {
             var block = blocks.models[k];
-            if (block.get("main") || true) {
-                (function (block) {
-                    require([block.get("name") + '/main'], function (main) {
-                        if (main) {
-                            if (main.init) {
-                                init_list.push(main);
-                            }
-                            if (main.methods) {
-                                SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
-                            }
-                            SmartBlocks.Blocks[block.get("name")].Main = main;
+
+            (function (block) {
+                require([block.get("name") + '/main'], function (main) {
+                    if (main) {
+                        if (main.init) {
+                            init_list.push(main);
                         }
-
-
-                        processed_blocks++;
-                        if (processed_blocks >= blocks_count) {
-                            SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
-
-                            for (var k in init_list) {
-                                init_list[k].init();
-                            }
-                            SmartBlocks.events.trigger("start_solution");
+                        if (main.methods) {
+                            SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
                         }
-                    });
-                })(block);
+                        SmartBlocks.Blocks[block.get("name")].Main = main;
+                    }
 
-            } else {
-                processed_blocks++;
-                if (processed_blocks >= blocks_count) {
-                    SmartBlocks.events.trigger("start_solution");
-                    SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
-                }
-            }
+
+                    processed_blocks++;
+                    if (processed_blocks >= blocks_count) {
+                        SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
+
+                        for (var k in init_list) {
+                            init_list[k].init();
+                        }
+                        SmartBlocks.events.trigger("start_solution");
+                    }
+                });
+            })(block);
         }
     }
 
@@ -171,7 +163,7 @@ define([
                 //Done loading everything, launching main app
 
                 if (!SmartBlocks.started) {
-                   SmartBlocks.Methods.start();
+                    SmartBlocks.Methods.start();
                     if (temp.callback) {
                         temp.callback();
                     }
@@ -423,7 +415,7 @@ define([
                                 },
                                 error: function () {
                                     SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
-                                    SmartBlocks.Blocks[block.get("name")].Data[type.plural] =  new SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name](amplify.store("block_data-" + block.get("token")));
+                                    SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name](amplify.store("block_data-" + block.get("token")));
                                     if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                         init_blocks();
                                     }
