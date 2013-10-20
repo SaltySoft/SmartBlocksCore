@@ -74,12 +74,13 @@ define([
             var app_routes = base.get("routing");
             if (SmartBlocks.Url.params.length == 0) {
                 if (base.routes) {
-                    base.routes[base.get("routing")["-"]].apply(base, parameters);
+                    if (base.routes[""])
+                        base.routes[""].apply(base, parameters);
                 }
                 return;
             }
-            for (var k in app_routes) {
-                var route = app_routes[k];
+            for (var k in base.routes) {
+                var route = base.routes[k];
                 var do_it = true;
                 var parameters = [];
                 var route_params = k.split("/");
@@ -100,7 +101,7 @@ define([
 
                 if (do_it) {
                     if (base.routes)
-                        base.routes[route].apply(base, parameters);
+                        route.apply(base, parameters);
                     break;
                 }
 
