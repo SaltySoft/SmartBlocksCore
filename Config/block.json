@@ -6,15 +6,6 @@
     "types": null,
     "main": "main",
     "apps": [
-        {
-            "name": "Socials and stuff",
-            "token": "kernel-socials",
-            "description": "Socials app",
-            "link": "#kernel-socials",
-            "logo_url": "/images/icons/user.png",
-            "block_token": "kernel",
-            "entry_point": "Apps/Socials/Views/MainView",
-            "style": "Apps/AppOrganizer/Css/app_organizer.less"
-        }
+
     ]
 }

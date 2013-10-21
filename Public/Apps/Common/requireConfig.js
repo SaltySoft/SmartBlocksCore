@@ -23,7 +23,9 @@ var sb_paths = {
 
     LoadingTemplate: "/Apps/Common/Templates/loading.html",
     LoadingScreen: "/Apps/Common/Views/LoadingScreen",
-    'Externals': 'Apps/Common/Useful/External'
+    'Externals': 'Apps/Common/Useful/External',
+    'moment': '/javascript/moment',
+    'datejs': '/javascript/date'
 };
 
 var sb_shims = {
