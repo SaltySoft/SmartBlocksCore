@@ -32,7 +32,6 @@ define([
                         SmartBlocks.Blocks[block.get("name")].Main = main;
                     }
 
-
                     processed_blocks++;
                     if (processed_blocks >= blocks_count) {
                         SmartBlocks.Methods.continueMainLoading((1 / blocks_count) * 2, "Initiating");
@@ -224,9 +223,8 @@ define([
                     base.keydown_list = {};
 
                     $(document).bind("keydown", function (e) {
-                        if (e.keyCode != 123) { //123 == F12. This key blocks all other shortcuts when opening debug console.
+                        console.log(e.keyCode);
                             base.keydown_list[e.keyCode] = true;
-
                             var active_keys = [];
                             for (var k in base.keydown_list) {
                                 if (base.keydown_list[k]) {
@@ -249,12 +247,12 @@ define([
                                     }
                                 }
                             }
-                        }
                     });
 
                     $(document).bind("keyup", function (e) {
-
-                        base.keydown_list[e.keyCode] = false;
+                        for (var k in base.keydown_list) {
+                            base.keydown_list[k] = false;
+                        }
                     });
                 },
                 add: function (list, callback, url_mask) {
