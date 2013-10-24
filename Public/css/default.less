@@ -15,6 +15,26 @@
 
 html {
   height: 100%;
+  .clickable-icon {
+    color: gray;
+    cursor: pointer;
+    transition: color 0.5s;
+    &:hover {
+      color: black;
+    }
+  }
+
+  .checkable-icon {
+    color: gray;
+    cursor: pointer;
+    transition: color 0.5s;
+    &:hover {
+      color: black;
+    }
+    &.checked {
+      color: black;
+    }
+  }
 }
 
 body {
@@ -26,6 +46,7 @@ body {
   width: 100%;
   position: absolute;
   overflow: hidden;
+
 }
 
 ::-webkit-scrollbar {
