@@ -8,3 +8,4 @@ Public/node_modules/*
 Plugins/*
 Lib/Node/node_modules/*
 Lib/Node/npm-debug.log
+Lib/Composer/vendor
