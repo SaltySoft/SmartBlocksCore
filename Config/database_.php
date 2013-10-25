@@ -23,6 +23,11 @@
 
 class DbConfig
 {
+    public function __construct()
+    {
+        define("INDEX", "smartblocks");
+    }
+
     public $dev = array(
         'host' => 'your_host',
         'user' => 'your_user',

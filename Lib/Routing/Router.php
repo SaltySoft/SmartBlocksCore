@@ -37,7 +37,7 @@ class Router
         array(
             "url" => array(
                 "controller" => "[a-zA-Z]+",
-                "id" => "[0-9]+"
+                "id" => '[0-9a-zA-Z\-_]+'
             ),
             "controller" => "",
             "method" => "DELETE",
@@ -46,7 +46,7 @@ class Router
         array(
             "url" => array(
                 "controller" => "[a-zA-Z]+",
-                "id" => "[0-9]+"
+                "id" => '[0-9a-zA-Z\-_]+'
             ),
             "controller" => "",
             "method" => "PUT",
