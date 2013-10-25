@@ -23,6 +23,13 @@ class UsersBusiness
 
         if (!$exists)
         {
+            $users = \User::where(array("email" => $data["email"]));
+
+            if (isset($users[0])) {
+                echo $data["email"];
+                return null;
+            }
+
             $user = new \User();
             $all_users = \User::all();
             if (!isset($all_users[0])) {

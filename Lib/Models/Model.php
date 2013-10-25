@@ -62,7 +62,7 @@ class Model
     {
         $class = get_called_class();
         $ob = new $class();
-        if (!$ob::$_elastic)
+        if (PERSISTANCE != "elastic" || true)
         {
             $dql = "SELECT b FROM " . get_called_class() . " b";
             $list = $GLOBALS["em"]->createQuery($dql)->getResult();
@@ -196,7 +196,7 @@ class Model
     {
         $class = get_called_class();
         $ob = new $class();
-        if (!$ob::$_elastic)
+        if (PERSISTANCE != "elastic" || true)
         {
 
             return $GLOBALS["em"]->find(get_called_class(), $id);
@@ -236,7 +236,7 @@ class Model
     {
         $class = get_called_class();
         $ob = new $class();
-        if (!$ob::$_elastic)
+        if (PERSISTANCE != "elastic" || true)
         {
             $array = new \Doctrine\Common\Collections\ArrayCollection();
             //$array = $GLOBALS["em"]->getRepository(get_called_class())->findBy($where);
@@ -285,7 +285,6 @@ class Model
                     $searchParams['body']['query']['bool']["must"][] = array("match" => array($key => $param));
                 }
             }
-
 
             $retDoc = $client->search($searchParams);
             $objects = array();
@@ -445,7 +444,7 @@ class Model
         $this->before_save();
         $class = get_called_class();
         $ob = new $class;
-        if (!$ob::$_elastic)
+        if (PERSISTANCE != "elastic" || true)
         {
             $GLOBALS["em"]->persist($this);
             $GLOBALS["em"]->flush();

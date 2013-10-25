@@ -58,15 +58,15 @@ class UsersController extends Controller
         $em = Model::getEntityManager();
         $qb = $em->createQueryBuilder();
         $qb->select("u")
-            ->from("User", "u")
-            ->setFirstResult(($page - 1) * $page_size)
-            ->setMaxResults($page_size);
+           ->from("User", "u")
+           ->setFirstResult(($page - 1) * $page_size)
+           ->setMaxResults($page_size);
 
         if (isset($_GET["filter"]) && $_GET["filter"] != "")
         {
             $qb->andWhere("u.name LIKE :username OR u.email LIKE :email")
-                ->setParameter("username", '%' . $_GET["filter"] . '%')
-                ->setParameter("email", '%' . $_GET["filter"] . '%');
+               ->setParameter("username", '%' . $_GET["filter"] . '%')
+               ->setParameter("email", '%' . $_GET["filter"] . '%');
         }
 
         $users = $qb->getQuery()->getResult();
@@ -96,25 +96,33 @@ class UsersController extends Controller
             }
         }
 
-        if (isset($_POST["redirect"]))
+        if (\User::logged_in())
         {
-            $this->redirect($_POST["redirect"]);
+            $this->json_message("logged");
         }
         else
         {
-            $this->redirect("/");
+            $this->json_error("not logged");
         }
 
     }
 
     function logout($params = array())
     {
-        $user = User::current_user();
-        if ($user != null)
-        {
-            $user->logout();
-        }
-        $this->redirect("/");
+//        echo "ALERT";
+//        $user = \User::current_user();
+//        if ($user != null)
+//        {
+//            $user->logout();
+//        }
+//        if (!\User::logged_in())
+//        {
+//            $this->json_message("logged out");
+//        }
+//        else
+//        {
+//            $this->json_error("still logged");
+//        }
     }
 
     function login_form()
@@ -144,7 +152,14 @@ class UsersController extends Controller
         $data = $this->getRequestData();
 
         $user = UsersBusiness::createOrUpdate($data);
-        $this->return_json($user->toArray());
+        if (is_object($user))
+        {
+            $this->return_json($user->toArray());
+        }
+        else
+        {
+            $this->json_error("You cannot subscribe twice.");
+        }
     }
 
     /**
@@ -182,9 +197,12 @@ class UsersController extends Controller
         $this->render = false;
         header('Content-Type: application/json');
         $user = User::current_user();
-        if (is_object($user)) {
+        if (is_object($user))
+        {
             echo json_encode($user->toArray());
-        } else {
+        }
+        else
+        {
             echo json_encode(array("status" => "error", "message" => "Not logged on"));
         }
     }
@@ -194,9 +212,12 @@ class UsersController extends Controller
         $this->render = false;
         header('Content-Type: application/json');
         $user = User::current_user();
-        if (is_object($user)) {
+        if (is_object($user))
+        {
             echo json_encode(array("last_update" => $user->getLastUpdated()));
-        } else {
+        }
+        else
+        {
             echo json_encode(array("status" => "error", "message" => "Not logged on"));
         }
     }

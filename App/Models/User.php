@@ -186,7 +186,20 @@ class User extends UserBase
 
     public function getRights()
     {
-        return $this->rights;
+        $return_array = array();
+        foreach ($this->rights as $right)
+        {
+            if (is_object($right))
+            {
+                $return_array[] = $right->getToken();
+            }
+            else
+            {
+                $return_array[] = $right;
+            }
+        }
+
+        return $return_array;
     }
 
     public function setRights($rights)
@@ -237,9 +250,9 @@ class User extends UserBase
 
         $rights = array("user");
 
-        foreach ($this->rights as $right)
+        foreach ($this->getRights() as $right)
         {
-            $rights[] = $right->getToken();
+            $rights[] = $right;
         }
 
 
@@ -247,7 +260,7 @@ class User extends UserBase
             "id" => $this->getId(),
             "firstname" => $this->getFirstname(),
             "lastname" => $this->getLastname(),
-            "username" => $this->getName(),
+            "name" => $this->getName(),
             "email" => $this->getEmail(),
             "session_id" => $this->getSessionId(),
             "last_updated" => $this->last_updated,
