@@ -42,32 +42,10 @@ class User extends UserBase
     private $firstname;
 
     /**
-     * @ManyToMany(targetEntity="Group", inversedBy="users")
-     */
-    private $groups;
-
-    /**
      * @Column(type="string")
      */
     private $token;
 
-    /**
-     * @ManyToMany(targetEntity="Application")
-     */
-    private $authorized_apps;
-
-    /**
-     * @ManyToMany(targetEntity="User", inversedBy="contacts_with_me")
-     * @JoinTable(name="user_contacts",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="contact_id", referencedColumnName="id")})
-     */
-    private $contacts;
-
-    /**
-     * @ManyToMany(targetEntity="User", mappedBy="contacts")
-     */
-    private $contact_with_me;
 
     /**
      * @Column(type="integer")
@@ -79,6 +57,11 @@ class User extends UserBase
      */
     private $rights;
 
+    /**
+     * @Column(type="string")
+     */
+    private $data;
+
 
     public function __construct()
     {
@@ -88,6 +71,7 @@ class User extends UserBase
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->rights = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->authorized_apps = new \Doctrine\Common\Collections\ArrayCollection();
         $this->last_updated = time();
     }
 
@@ -205,7 +189,48 @@ class User extends UserBase
         return $this->rights;
     }
 
+    public function setRights($rights)
+    {
+        if (PERSISTANCE == "rdbm")
+        {
+            $rights_to_add = array();
 
+            foreach ($rights as $right_a)
+            {
+                $rights = Right::where(array("token" => $right_a));
+                if (isset($rights[0]))
+                {
+                    $rights_to_add[] = $rights[0];
+                }
+            }
+
+            $rights = new \Doctrine\Common\Collections\ArrayCollection($rights_to_add);
+        }
+
+        $this->rights = $rights;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data)
+    {
+        if (PERSISTANCE == "rdbm")
+            $data = json_encode($data);
+
+        $this->data = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        $data = $this->data;
+        if (PERSISTANCE == "rdbm")
+            $data = json_decode($data, true);
+        return $data;
+    }
 
     public function toArray($load_sub = 1)
     {
@@ -228,32 +253,6 @@ class User extends UserBase
             "last_updated" => $this->last_updated,
             "rights" => $rights
         );
-
-
-        if ($load_sub == 1)
-        {
-            $authorized_apps = array();
-            foreach ($this->authorized_apps as $app)
-            {
-                $authorized_apps[] = $app->toArray();
-            }
-
-            $contacts = array();
-            if ($load_sub == 1)
-            {
-                foreach ($this->contacts as $contact)
-                {
-                    $contacts[] = $contact->toArray(0);
-                }
-                foreach ($this->contact_with_me as $contact)
-                {
-                    $contacts[] = $contact->toArray(0);
-                }
-            }
-
-            $array["authorized_apps"] = $authorized_apps;
-            $array["contacts"] = $contacts;
-        }
 
         return $array;
     }
