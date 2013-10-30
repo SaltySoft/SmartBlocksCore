@@ -109,20 +109,19 @@ class UsersController extends Controller
 
     function logout($params = array())
     {
-//        echo "ALERT";
-//        $user = \User::current_user();
-//        if ($user != null)
-//        {
-//            $user->logout();
-//        }
-//        if (!\User::logged_in())
-//        {
-//            $this->json_message("logged out");
-//        }
-//        else
-//        {
-//            $this->json_error("still logged");
-//        }
+        $user = \User::current_user();
+        if ($user != null)
+        {
+            $user->logout();
+        }
+        if (!\User::logged_in())
+        {
+            $this->json_message("logged out");
+        }
+        else
+        {
+            $this->json_error("still logged");
+        }
     }
 
     function login_form()
