@@ -3,8 +3,17 @@
     "token": "kernel",
     "description": "This is the kernel app block",
     "color": "#846fb8",
-    "types": null,
     "main": "main",
+    "types": [
+        {
+            "model_name": "User",
+            "collection_name": "Users",
+            "plural": "users",
+            "ws_origin": "/Users",
+            "model_location": "UserModel",
+            "collection_location": "UsersCollection"
+        }
+    ],
     "apps": [
 
     ]
