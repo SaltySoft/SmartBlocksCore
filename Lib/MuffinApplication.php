@@ -249,15 +249,19 @@ class MuffinApplication
         return self::$http_headers[self::$http_code];
     }
 
+
+    /**
+     * @return string
+     */
     public static function getSessionId()
     {
-        if (isset($_SESSION["_session_id"])) {
-            return $_SESSION["_session_id"];
-        } else {
-            $key = md5(microtime() . rand());
-            $_SESSION["_session_id"] = $key;
-        }
-
+//        if (isset($_SESSION["_session_id"])) {
+//            return $_SESSION["_session_id"];
+//        } else {
+//            $key = md5(microtime() . rand());
+//            $_SESSION["_session_id"] = $key;
+//        }
+        return session_id();
     }
 
     public static function unsetSessionId()
