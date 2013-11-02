@@ -230,7 +230,7 @@ class Model
      * Returns all the entities that verify the given array of parameters
      * @static
      * @param array $where Parameters filter
-     * @return array
+     * @return User[]
      */
     static function where($where = array())
     {

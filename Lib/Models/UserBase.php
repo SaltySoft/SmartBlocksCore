@@ -105,6 +105,10 @@ class UserBase extends Model
         return $this->admin == true;
     }
 
+
+    /**
+     * Logs the user and sets their session id.
+     */
     public function login()
     {
         if ($this->isValid())
