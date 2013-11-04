@@ -9,3 +9,4 @@ Plugins/*
 Lib/Node/node_modules/*
 Lib/Node/npm-debug.log
 Lib/Composer/vendor
+Config/front-end-config.json

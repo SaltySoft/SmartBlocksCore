@@ -1,0 +1,9 @@
+{
+    "startup_app": {
+        "block": "SmartBlocksSite",
+        "app": "LandingPage",
+        "url_params": [
+
+        ]
+    }
+}
