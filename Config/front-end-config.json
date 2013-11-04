@@ -1,9 +1,0 @@
-{
-    "startup_app": {
-        "block": "app_dashboard",
-        "app": "app_organizer",
-        "url_params": [
-
-        ]
-    }
-}

@@ -1,7 +1,7 @@
 {
     "startup_app": {
-        "block": "SmartBlocksSite",
-        "app": "LandingPage",
+        "block": "AppDashboard",
+        "app": "app_organizer",
         "url_params": [
 
         ]
