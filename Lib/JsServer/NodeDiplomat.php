@@ -20,6 +20,18 @@ class NodeDiplomat
 
     }
 
+
+    public static function broadCastMessage($array)
+    {
+        $data = array(
+            "data" => $array,
+//            "origin" => session_id()
+        );
+        return self::post_to_url("http://" . $_SERVER["SERVER_NAME"] . ":" . self::$port . "/send", $data);
+
+    }
+
+
     private static function post_to_url($url, $data)
     {
         $fields = '';
