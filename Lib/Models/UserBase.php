@@ -138,6 +138,9 @@ class UserBase extends Model
         return ($current_user != null) && $current_user->isAdmin();
     }
 
+    /**
+     * @return \User
+     */
     public static function current_user()
     {
         if (self::logged_in())

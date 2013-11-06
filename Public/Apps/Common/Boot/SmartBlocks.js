@@ -30,6 +30,8 @@ define([
                             SmartBlocks.Blocks[block.get("name")].Methods = main.methods;
                         }
                         SmartBlocks.Blocks[block.get("name")].Main = main;
+
+
                     }
 
                     processed_blocks++;
@@ -42,6 +44,8 @@ define([
                         SmartBlocks.events.trigger("start_solution");
                     }
                 });
+
+                SmartBlocks.Blocks[block.get("name")].rights = block.get('rights');
             })(block);
         }
     }
