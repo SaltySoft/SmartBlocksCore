@@ -6,6 +6,7 @@
  */
 
 require_once(ROOT . DS . "App" . DS . "BusinessManagement" . DS . "SmartBlocks.php");
+require_once(ROOT . DS . "App" . DS . "BusinessManagement" . DS . "BlockConfigNotfoundException.php");
 class BlocksController extends Controller
 {
     /**
@@ -22,9 +23,13 @@ class BlocksController extends Controller
 
         foreach ($directories as $directory)
         {
-            $block_info = \BusinessManagement\SmartBlocks::loadBlockInformation($directory);
-            if (is_array($block_info))
-                $response[] = $block_info;
+            try {
+                $block_info = \BusinessManagement\SmartBlocks::loadBlockInformation($directory);
+                if (is_array($block_info))
+                    $response[] = $block_info;
+            } catch (\BusinessManagement\BlockConfigNotFoundException $e) {
+
+            }
         }
 
         $this->return_json($response);

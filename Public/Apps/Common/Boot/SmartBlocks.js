@@ -21,6 +21,7 @@ define([
             var block = blocks.models[k];
 
             (function (block) {
+                SmartBlocks.Blocks[block.get("name")].Config = block.get('config');
                 require([block.get("name") + '/main'], function (main) {
                     if (main) {
                         if (main.init) {
@@ -98,7 +99,8 @@ define([
             SmartBlocks.Blocks[block.get("name")] = {
                 Models: {},
                 Collections: {},
-                Data: {}
+                Data: {},
+                Config: {}
             };
             for (var t in types) {
                 var type = types[t];
@@ -185,6 +187,7 @@ define([
                     this.routesHit = 0;
                     Backbone.history.on('route', function () {
                         this.routesHit++;
+                        SmartBlocks.events.trigger("url_changed");
                     }, this);
                 },
                 entry: function () {

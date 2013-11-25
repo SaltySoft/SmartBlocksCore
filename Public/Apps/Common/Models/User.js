@@ -25,7 +25,7 @@ define([
         },
         getImageUrl: function (size, callback) {
             var base = this;
-            Externals.webshell.exec({
+            SmartBlocks.Blocks.WebshellBlock.Main.exec({
                 code: function () {
                     echo(apis.gravatar({
                         mail: args.usermail,
