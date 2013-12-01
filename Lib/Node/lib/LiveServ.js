@@ -29,6 +29,22 @@ exports.init = function () {
         socket.on('set id', function (php_session_id) {
             socket.set('id', php_session_id);
         });
+
+        socket.on('send_message', function (session_id, message) {
+            var clients = io.sockets.clients();
+            for (var k in clients) {
+                var client = clients[k];
+                client.get('id', function (err, id) {
+                    if (id == session_id) {
+                        client.emit("msg", message);
+                    }
+                });
+            }
+        });
+
+        socket.on('broadcast_message', function (message) {
+            io.sockets.emit('msg', message);
+        });
     });
 
 

@@ -108,15 +108,22 @@ define([
             }
         }
 
-        if ("WebSocket" in window) {
-            if (window.io) {
+        if (window.io) {
+            var socket = io.connect("http://" + SmartBlocks.Config.server_name + ":10001");
+            socket.emit('set id', SmartBlocks.Config.session_id);
+            socket.on('msg', function (data) {
+                SmartBlocks.events.trigger("ws_notification", data);
+            });
+            SmartBlocks.socket = socket;
 
-                var socket = io.connect("http://" + SmartBlocks.Config.server_name + ":10001");
-                socket.emit('set id', SmartBlocks.Config.session_id);
-                socket.on('msg', function (data) {
-                    SmartBlocks.events.trigger("ws_notification", data);
-                });
+            SmartBlocks.sendWs = function (session_id, message) {
+                socket.emit('send_message',session_id, message);
+            };
+
+            SmartBlocks.broadcastWs = function (message) {
+                socket.emit('broadcast_message', message);
             }
+            console.log(SmartBlocks);
         }
 
 
@@ -231,29 +238,29 @@ define([
 
                     $(document).bind("keydown", function (e) {
                         console.log(e.keyCode);
-                            base.keydown_list[e.keyCode] = true;
-                            var active_keys = [];
-                            for (var k in base.keydown_list) {
-                                if (base.keydown_list[k]) {
-                                    active_keys.push(k);
+                        base.keydown_list[e.keyCode] = true;
+                        var active_keys = [];
+                        for (var k in base.keydown_list) {
+                            if (base.keydown_list[k]) {
+                                active_keys.push(k);
+                            }
+                        }
+                        for (var k in base.shortcuts) {
+                            var shortcut = base.shortcuts[k];
+                            var checked_keys = 0;
+                            for (var i in shortcut.keys) {
+                                var key = shortcut.keys[i];
+                                if (base.keydown_list[key]) {
+                                    checked_keys += 1;
                                 }
                             }
-                            for (var k in base.shortcuts) {
-                                var shortcut = base.shortcuts[k];
-                                var checked_keys = 0;
-                                for (var i in shortcut.keys) {
-                                    var key = shortcut.keys[i];
-                                    if (base.keydown_list[key]) {
-                                        checked_keys += 1;
-                                    }
-                                }
-                                if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
-                                    if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0) {
-                                        shortcut.action();
-                                        e.preventDefault();
-                                    }
+                            if (checked_keys == active_keys.length && checked_keys == shortcut.keys.length) {
+                                if (!shortcut.url_mask || ("#" + SmartBlocks.Url.full).indexOf(shortcut.url_mask) == 0) {
+                                    shortcut.action();
+                                    e.preventDefault();
                                 }
                             }
+                        }
                     });
 
                     $(document).bind("keyup", function (e) {
