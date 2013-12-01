@@ -53,12 +53,12 @@ define([
 
     function load_blocks() {
         SmartBlocks.Data.blocks.fetch({
-            success: function () {
+            success:function () {
                 SmartBlocks.Methods.continueMainLoading(1, "Loading config");
                 amplify.store("sb.data.blocks", SmartBlocks.Data.blocks.toArray());
                 load_config();
             },
-            error: function () {
+            error:function () {
                 SmartBlocks.Methods.continueMainLoading(1, "Loading config");
                 SmartBlocks.Data.blocks = new SmartBlocks.Collections.Blocks(amplify.store("sb.data.blocks"));
                 load_config();
@@ -69,13 +69,13 @@ define([
     function load_config() {
         SmartBlocks.Methods.continueMainLoading(1, "Loading config");
         $.ajax({
-            url: "/Configs/front_end_config",
-            success: function (data, status) {
+            url:"/Configs/front_end_config",
+            success:function (data, status) {
                 SmartBlocks.Config = data;
                 amplify.store("sb.config", data);
                 after_config();
             },
-            error: function () {
+            error:function () {
                 SmartBlocks.Config = amplify.store("sb.config");
                 after_config();
             }
@@ -97,10 +97,10 @@ define([
             var types = block.get("types");
 
             SmartBlocks.Blocks[block.get("name")] = {
-                Models: {},
-                Collections: {},
-                Data: {},
-                Config: {}
+                Models:{},
+                Collections:{},
+                Data:{},
+                Config:{}
             };
             for (var t in types) {
                 var type = types[t];
@@ -117,13 +117,14 @@ define([
             SmartBlocks.socket = socket;
 
             SmartBlocks.sendWs = function (session_id, message) {
-                socket.emit('send_message',session_id, message);
+                socket.emit('send_message', session_id, message);
             };
 
             SmartBlocks.broadcastWs = function (message) {
+                SmartBlocks.events.trigger("broadcastWs", message);
                 socket.emit('broadcast_message', message);
             }
-            console.log(SmartBlocks);
+//            console.log(SmartBlocks);
         }
 
 
@@ -152,15 +153,15 @@ define([
     }
 
     var SmartBlocks = {
-        Url: {
-            params: []
+        Url:{
+            params:[]
         },
-        basics: sb_basics,
-        events: null,
-        current_session: null,
-        current_user: null,
-        router: null,
-        init: function (callback, production) {
+        basics:sb_basics,
+        events:null,
+        current_session:null,
+        current_user:null,
+        router:null,
+        init:function (callback, production) {
             temp.callback = callback;
 
             if (production) {
@@ -184,12 +185,12 @@ define([
             });
 
             SmartBlocks.basics.Router = Backbone.Router.extend({
-                routes: {
-                    "": "entry",
-                    ":appname": "launch_app",
-                    ":appname/:params": "launch_app"
+                routes:{
+                    "":"entry",
+                    ":appname":"launch_app",
+                    ":appname/:params":"launch_app"
                 },
-                initialize: function () {
+                initialize:function () {
                     this.route(/^([a-zA-Z]*?)\/(.*?)$/, "launch_app", this.launch_app);
                     this.routesHit = 0;
                     Backbone.history.on('route', function () {
@@ -197,26 +198,26 @@ define([
                         SmartBlocks.events.trigger("url_changed");
                     }, this);
                 },
-                entry: function () {
+                entry:function () {
                     SmartBlocks.Url.params = {};
                     SmartBlocks.Url.appname = "";
                     SmartBlocks.Url.full = "";
                     SmartBlocks.Methods.entry();
                 },
-                launch_app: function (appname, params) {
+                launch_app:function (appname, params) {
 
                     SmartBlocks.Url.params = params ? params.split("/") : [];
                     SmartBlocks.Url.appname = appname;
                     SmartBlocks.Url.full = appname + "/" + params;
                     var app = SmartBlocks.Data.apps.where({
-                        token: appname
+                        token:appname
                     })[0];
                     if (app && (!SmartBlocks.current_app || SmartBlocks.current_app.get("token") != app.get("token"))) {
                         app = SmartBlocks.Data.apps.get(app.get('token'));
                         SmartBlocks.Methods.setApp(app);
                     }
                 },
-                back: function () {
+                back:function () {
                     if (this.routesHit > 1) {
                         window.history.back();
                     } else {
@@ -227,9 +228,9 @@ define([
             });
 
             SmartBlocks.Shortcuts = {
-                initial_shortcuts: [
+                initial_shortcuts:[
                 ],
-                init: function () {
+                init:function () {
                     var base = this;
 
                     base.shortcuts = $.extend([], base.initial_shortcuts);
@@ -269,15 +270,15 @@ define([
                         }
                     });
                 },
-                add: function (list, callback, url_mask) {
+                add:function (list, callback, url_mask) {
                     var base = this;
                     base.shortcuts.push({
-                        keys: list,
-                        action: callback,
-                        url_mask: url_mask
+                        keys:list,
+                        action:callback,
+                        url_mask:url_mask
                     });
                 },
-                clear: function () {
+                clear:function () {
                     var base = this;
                     base.shortcuts = $.extend({}, base.initial_shortcuts);
                 }
@@ -304,12 +305,12 @@ define([
                 SmartBlocks.current_user = current_user;
                 UserRequester.initialize(SmartBlocks.basics);
                 SmartBlocks.Data.apps.fetch({
-                    success: function () {
+                    success:function () {
                         SmartBlocks.Methods.continueMainLoading(1, "Loading blocks");
                         amplify.store("sb.data.apps", SmartBlocks.Data.apps.toArray());
                         load_blocks();
                     },
-                    error: function () {
+                    error:function () {
                         SmartBlocks.Methods.continueMainLoading(1, "Loading blocks");
                         SmartBlocks.Data.apps = new SmartBlocks.Collections.Applications(amplify.store("sb.data.apps"));
                         load_blocks();
@@ -321,11 +322,11 @@ define([
 
 
         },
-        States: {
-            main_loading: false
+        States:{
+            main_loading:false
         },
-        Methods: {
-            start: function () {
+        Methods:{
+            start:function () {
                 Backbone.history.start();
                 $(window).bind("hashchange", function () {
                     SmartBlocks.events.trigger("hashchange");
@@ -342,26 +343,26 @@ define([
                     }
                 });
             },
-            render: function (view) {
+            render:function (view) {
                 var base = this;
                 $("#content").html(view);
             },
-            setApp: function (app) {
+            setApp:function (app) {
                 var base = this;
 
                 app.launch();
 
             },
-            entry: function () {
+            entry:function () {
                 if (!SmartBlocks.entry_app) {
                     var block = SmartBlocks.Data.blocks.where({
-                        token: SmartBlocks.Config.startup_app.block
+                        token:SmartBlocks.Config.startup_app.block
                     })[0];
                     if (block) {
                         SmartBlocks.Url.params = SmartBlocks.Config.startup_app.url_params;
                         var apps = new SmartBlocks.Collections.Applications(block.get('apps'));
                         var app = apps.where({
-                            token: SmartBlocks.Config.startup_app.app
+                            token:SmartBlocks.Config.startup_app.app
                         })[0];
 
                         if (app) {
@@ -377,7 +378,7 @@ define([
 
 
             },
-            startMainLoading: function (message, steps, show_pb) {
+            startMainLoading:function (message, steps, show_pb) {
                 if (!SmartBlocks.loading_screen) {
                     SmartBlocks.loading_screen = new LoadingScreen();
                 }
@@ -397,20 +398,20 @@ define([
 
 
             },
-            continueMainLoading: function (step_add, message) {
+            continueMainLoading:function (step_add, message) {
                 if (message) {
                     SmartBlocks.loading_screen.setText(message);
                 }
                 SmartBlocks.loading_screen.setLoad(SmartBlocks.loading_screen.pb_view.load + step_add);
             },
-            stopMainLoading: function () {
+            stopMainLoading:function () {
                 SmartBlocks.States.main_loading = false;
             },
-            types: {
-                count: 0,
-                processed: 0
+            types:{
+                count:0,
+                processed:0
             },
-            addType: function (type, block) {
+            addType:function (type, block) {
                 (function (block) {
                     require([type.model_location, type.collection_location], function (model, collection) {
                         if (!block.get("restricted_to") || SmartBlocks.current_user.hasRight(block.get("restricted_to"))) {
@@ -418,14 +419,14 @@ define([
                             SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name] = collection;
                             SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new collection();
                             SmartBlocks.Blocks[block.get("name")].Data[type.plural].fetch({
-                                success: function () {
+                                success:function () {
                                     SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
                                     amplify.store("block_data-" + block.get("token"), SmartBlocks.Blocks[block.get("name")].Data[type.plural].toArray());
                                     if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
                                         init_blocks();
                                     }
                                 },
-                                error: function () {
+                                error:function () {
                                     SmartBlocks.Methods.continueMainLoading((1 / SmartBlocks.Methods.count) * 3, "Loading data");
                                     SmartBlocks.Blocks[block.get("name")].Data[type.plural] = new SmartBlocks.Blocks[block.get("name")].Collections[type.collection_name](amplify.store("block_data-" + block.get("token")));
                                     if (++SmartBlocks.Methods.processed >= SmartBlocks.Methods.count) {
