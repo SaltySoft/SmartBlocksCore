@@ -10,5 +10,5 @@ Plugins/*
 Lib/Node/node_modules/*
 Lib/Node/npm-debug.log
 Lib/Composer/vendor
-Apps/Views/Layouts/default.html.twig
+App/Views/Layouts/default.html.twig
 
