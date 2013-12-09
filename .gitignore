@@ -1,6 +1,7 @@
 Tmp/*
 App/Logs/*
 Config/database.php
+Config/front-end-config.json
 .idea
 Data/Schemas/*
 Data/User_files/*
@@ -8,3 +9,6 @@ Public/node_modules/*
 Plugins/*
 Lib/Node/node_modules/*
 Lib/Node/npm-debug.log
+Lib/Composer/vendor
+App/Views/Layouts/default.html.twig
+

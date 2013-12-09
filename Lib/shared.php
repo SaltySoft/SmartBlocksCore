@@ -182,6 +182,10 @@ function system_autoload($className)
     {
         require_once(ROOT . DS . "App" . DS . "Exceptions" . DS . $className . ".php");
     }
+    else if (file_exists(ROOT . DS . "App" . DS . "Business" . DS . $className . ".php"))
+    {
+        require_once(ROOT . DS . "App" . DS . "Business" . DS . $className . ".php");
+    }
     else
     {
 
@@ -201,6 +205,10 @@ function system_autoload($className)
             if (file_exists(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "BusinessManagement" . DS . $className . ".php"))
             {
                 require_once(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "BusinessManagement" . DS . $className . ".php");
+            }
+            if (file_exists(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Business" . DS . $className . ".php"))
+            {
+                require_once(ROOT . DS . "Plugins" . DS . $plugin . DS . "App" . DS . "Business" . DS . $className . ".php");
             }
         }
     }

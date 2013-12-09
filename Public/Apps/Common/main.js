@@ -21,6 +21,7 @@ $(document).ready(function () {
     //Uncomment next line to disable default context menu everywhere in SmartBlocks
     requirejs(apps,
         function (/*defaults, */_, Backbone, sb_basics, User, UsersCollection, UserRequester, Externals, LoadingScreen, SmartBlocks) {
+
             SmartBlocks.init(function () {
 
             });

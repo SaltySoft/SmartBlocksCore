@@ -25,7 +25,7 @@ define([
         },
         getImageUrl: function (size, callback) {
             var base = this;
-            Externals.webshell.exec({
+            SmartBlocks.Blocks.WebshellBlock.Main.exec({
                 code: function () {
                     echo(apis.gravatar({
                         mail: args.usermail,
@@ -68,10 +68,16 @@ define([
                         success: function () {
 
                             amplify.store("current_user", user.attributes);
+                            if (user.get('id')) {
+                                user.set("connected", true);
+                            }
                             callback(user);
                         },
                         error: function () {
                             user = new User(amplify.store("current_user"));
+                            if (user.get('id')) {
+                                user.set("connected", true);
+                            }
                             callback(user);
                         }
                     });
@@ -84,6 +90,9 @@ define([
                 var user = new User();
                 if (amplify.store("current_user")) {
                     user = new User(amplify.store("current_user"));
+                }
+                if (user.get('id')) {
+                    user.set("connected", true);
                 }
                 callback(user);
             }

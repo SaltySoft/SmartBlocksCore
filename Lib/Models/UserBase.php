@@ -105,6 +105,10 @@ class UserBase extends Model
         return $this->admin == true;
     }
 
+
+    /**
+     * Logs the user and sets their session id.
+     */
     public function login()
     {
         if ($this->isValid())
@@ -134,6 +138,9 @@ class UserBase extends Model
         return ($current_user != null) && $current_user->isAdmin();
     }
 
+    /**
+     * @return \User
+     */
     public static function current_user()
     {
         if (self::logged_in())

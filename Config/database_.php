@@ -23,6 +23,12 @@
 
 class DbConfig
 {
+    public function __construct()
+    {
+        define("INDEX", "smartblocks");
+        define("PERSISTANCE", "rdbm");//set to "elastic_search" to enable nosql storage
+    }
+
     public $dev = array(
         'host' => 'your_host',
         'user' => 'your_user',

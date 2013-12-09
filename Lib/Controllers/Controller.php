@@ -253,7 +253,7 @@ class Controller
      * Useful for REST web-services
      * @return The array containing all data
      */
-    protected function getRequestData()
+    protected function  getRequestData()
     {
         $input = $this->input;
         $decoded_data = array();

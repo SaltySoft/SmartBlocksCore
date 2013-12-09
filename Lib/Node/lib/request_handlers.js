@@ -19,13 +19,12 @@ function send(request, response, io) {
         for (var k in clients) {
             var client = clients[k];
             client.get('id', function (err, id) {
-                if (id == session_id) {
+                if (id == session_id || !session_id) {
                     var elt = {};
                     console.log("Emitted to " + id, elt);
                     elt = JSON.parse(post.data);
                     elt.origin = post.origin;
                     client.emit("msg", elt);
-
                 }
             });
         }

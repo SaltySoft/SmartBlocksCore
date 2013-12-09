@@ -2,6 +2,8 @@
 
 namespace BusinessManagement;
 
+require_once(ROOT . DS . "App" . DS . "BusinessManagement" . DS . "BlockConfigNotfoundException.php");
+
 /**
  * This is the main logic class of the server app.
  */
@@ -152,7 +154,7 @@ class SmartBlocks
         }
         else
         {
-            throw new \Exception("Block config folder not found in " . $dir_path, 404);
+            throw new \BusinessManagement\BlockConfigNotFoundException("Block config folder not found in " . $dir_path, 404);
         }
 
         return $data;

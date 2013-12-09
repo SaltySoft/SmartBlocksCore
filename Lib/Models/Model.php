@@ -34,6 +34,8 @@ class Model
 {
     protected $_model;
     protected $webservices_attr = array();
+    public static $_elastic = false;
+
 
     function __construct()
     {
@@ -56,11 +58,133 @@ class Model
      * @static
      * @return All the entities from the caller model
      */
-    static function all()
+    static function all($params = array())
     {
-        $dql = "SELECT b FROM " . get_called_class() . " b";
-        $list = $GLOBALS["em"]->createQuery($dql)->getResult();
-        return $list;
+        $class = get_called_class();
+        $ob = new $class();
+        if (PERSISTANCE != "elastic" || true)
+        {
+            $dql = "SELECT b FROM " . get_called_class() . " b";
+            $list = $GLOBALS["em"]->createQuery($dql)->getResult();
+            return $list;
+        }
+        else
+        {
+            $client = new \Elasticsearch\Client();
+            $searchParams = array();
+            $searchParams['index'] = INDEX;
+            $searchParams['type'] = str_replace("\\", "_", $class);
+
+            foreach ($params as $key => $param)
+            {
+                if (is_object($param))
+                {
+                    if (is_subclass_of($param, "Model"))
+                    {
+                        $searchParams['body']['query']['match'][$key.'.id'] = $params[$key]->getId();
+                    }
+                }
+                else
+                {
+                    $searchParams['body']['query']['match'][$key] = $param;
+                }
+            }
+
+
+            $retDoc = $client->search($searchParams);
+            $objects = array();
+
+            foreach ($retDoc["hits"]["hits"] as $ret)
+            {
+                $object = self::objectFromElastic($ret, $class);
+                $objects[] = $object;
+
+            }
+
+            return $objects;
+        }
+    }
+
+    static function objectFromElastic($ret, $class)
+    {
+        $object = new  $class();
+
+
+        $reflectionClass = new ReflectionClass($object);
+
+
+        foreach ($ret["_source"] as $key => $value)
+        {
+            if ($reflectionClass->hasProperty($key))
+            {
+                $prop = $reflectionClass->getProperty($key);
+                if (!$prop->isPublic())
+                {
+                    $prop->setAccessible(true);
+                }
+                if (is_array($value))
+                {
+                    if (isset($value["id"]) && isset($value["class"]))
+                    {
+                        $subobject = $value["class"]::find($value["id"]);
+                        $prop->setValue($object, $subobject);
+                    }
+                    else
+                    {
+                        $prop->setValue($object, $value);
+                    }
+                }
+                else if ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value) !== false)
+                {
+                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $value);
+                    $prop->setValue($object, $date);
+                }
+                else
+                {
+
+                    $prop->setValue($object, $value);
+                }
+                if (!$prop->isPublic())
+                {
+                    $prop->setAccessible(false);
+                }
+            }
+            else
+            {
+                if ($reflectionClass->hasProperty("data"))
+                {
+
+                    $prop = $reflectionClass->getProperty("data");
+                    if (!$prop->isPublic())
+                    {
+                        $prop->setAccessible(true);
+                    }
+                    $data = json_decode($prop->getValue($object), true);
+                    $data[$key] = $value;
+                    $prop->setValue($object, json_encode($data));
+                    if (!$prop->isPublic())
+                    {
+                        $prop->setAccessible(false);
+                    }
+                }
+            }
+
+
+        }
+
+        $prop = $reflectionClass->getProperty("id");
+        if (!$prop->isPublic())
+        {
+            $prop->setAccessible(true);
+        }
+        $prop->setValue($object, $ret["_id"]);
+        if (!$prop->isPublic())
+        {
+            $prop->setAccessible(false);
+        }
+
+
+        return $object;
     }
 
     /**
@@ -70,7 +194,26 @@ class Model
      */
     static function find($id)
     {
-        return $GLOBALS["em"]->find(get_called_class(), $id);
+        $class = get_called_class();
+        $ob = new $class();
+        if (PERSISTANCE != "elastic" || true)
+        {
+
+            return $GLOBALS["em"]->find(get_called_class(), $id);
+        }
+        else
+        {
+
+            $getParams = array();
+            $getParams['index'] = INDEX;
+            $getParams['type'] = str_replace("\\", "_", $class);
+            $getParams['id'] = $id;
+            $client = new \Elasticsearch\Client();
+            $ret = $client->get($getParams);
+            $object = self::objectFromElastic($ret, $class);
+
+            return $object;
+        }
     }
 
     private static function add_where_statement($where, $i, $field)
@@ -87,34 +230,73 @@ class Model
      * Returns all the entities that verify the given array of parameters
      * @static
      * @param array $where Parameters filter
-     * @return array
+     * @return User[]
      */
     static function where($where = array())
     {
-        $array = new \Doctrine\Common\Collections\ArrayCollection();
-        //$array = $GLOBALS["em"]->getRepository(get_called_class())->findBy($where);
-        $qb = $GLOBALS["em"]->createQueryBuilder();
-        $qb->add("select", "b")->add("from", get_called_class() . " b");
-        $statement = "";
-        $i = 1;
-        $vals = array();
-        foreach ($where as $field => $value)
+        $class = get_called_class();
+        $ob = new $class();
+        if (PERSISTANCE != "elastic" || true)
         {
-            if ($statement != "")
+            $array = new \Doctrine\Common\Collections\ArrayCollection();
+            //$array = $GLOBALS["em"]->getRepository(get_called_class())->findBy($where);
+            $qb = $GLOBALS["em"]->createQueryBuilder();
+            $qb->add("select", "b")->add("from", get_called_class() . " b");
+            $statement = "";
+            $i = 1;
+            $vals = array();
+            foreach ($where as $field => $value)
             {
-                $statement .= " AND ";
+                if ($statement != "")
+                {
+                    $statement .= " AND ";
+                }
+                $statement .= " b." . $field . " = ?" . $i;
+                $vals[$i] = $value;
+                $i++;
             }
-            $statement .= " b." . $field . " = ?" . $i;
-            $vals[$i] = $value;
-            $i++;
+            $qb->add("where", $statement);
+            foreach ($vals as $k => $v)
+            {
+                $qb->setParameters(array($k => $v));
+            }
+            $array = $qb->getQuery()->getResult();
+            return $array;
         }
-        $qb->add("where", $statement);
-        foreach ($vals as $k => $v)
+        else
         {
-            $qb->setParameters(array($k => $v));
+            $params = $where;
+            $client = new \Elasticsearch\Client();
+            $searchParams = array();
+            $searchParams['index'] = INDEX;
+            $searchParams['type'] = str_replace("\\", "_", $class);
+
+            foreach ($params as $key => $param)
+            {
+                if (is_object($param))
+                {
+                    if (is_subclass_of($param, "Model"))
+                    {
+                        $searchParams['body']['query']['bool']["must"][] = array("match" => array($key => $params[$key]->getId()));
+                    }
+                }
+                else
+                {
+                    $searchParams['body']['query']['bool']["must"][] = array("match" => array($key => $param));
+                }
+            }
+
+            $retDoc = $client->search($searchParams);
+            $objects = array();
+
+            foreach ($retDoc["hits"]["hits"] as $ret)
+            {
+                $object = self::objectFromElastic($ret, $class);
+                $objects[] = $object;
+            }
+
+            return $objects;
         }
-        $array = $qb->getQuery()->getResult();
-        return $array;
     }
 
     /**
@@ -260,9 +442,82 @@ class Model
     function save()
     {
         $this->before_save();
-        $GLOBALS["em"]->persist($this);
-        $GLOBALS["em"]->flush();
+        $class = get_called_class();
+        $ob = new $class;
+        if (PERSISTANCE != "elastic" || true)
+        {
+            $GLOBALS["em"]->persist($this);
+            $GLOBALS["em"]->flush();
+        }
+        else
+        {
+            $client = new \Elasticsearch\Client();
+            $stored_array = $this->getPersistArray();
+
+            $params = array(
+                "index" => INDEX,
+                "type" => str_replace("\\", "_", get_class($this)),
+                "body" => $stored_array
+            );
+            if ($stored_array["id"] != null)
+            {
+                $params["id"] = $stored_array["id"];
+            }
+            unset($stored_array["id"]);
+
+            $ret = $client->index($params);
+
+            if ($ret["ok"] == 1)
+            {
+                $reflectionClass = new ReflectionClass($this);
+                $prop = $reflectionClass->getProperty("id");
+                if (!$prop->isPublic())
+                    $prop->setAccessible(true);
+                $prop->setValue($this, $ret["_id"]);
+                if (!$prop->isPublic())
+                    $prop->setAccessible(false);
+            }
+        }
         $this->after_save();
+    }
+
+    protected function getPersistArray()
+    {
+        $reflectionClass = new ReflectionClass($this);
+        $properties = $reflectionClass->getProperties();
+        $stored_array = array();
+
+        foreach ($properties as $prop)
+        {
+
+            if (!$prop->isPublic())
+                $prop->setAccessible(true);
+            $value = $prop->getValue($this);
+            if (is_object($value))
+            {
+
+                if (get_class($value) == 'DateTime')
+                {
+
+                    $stored_array[$prop->getName()] = $value->format('Y-m-d\TH:i:s.uO');
+                }
+                else
+                {
+                    $stored_array[$prop->getName()] = array(
+                        "id" => $value->id,
+                        "class" => get_class($value)
+                    );
+                }
+            }
+            else
+            {
+                $stored_array[$prop->getName()] = $value;
+
+            }
+            if (!$prop->isPublic())
+                $prop->setAccessible(false);
+        }
+        return $stored_array;
     }
 
     /**
@@ -270,8 +525,23 @@ class Model
      */
     function delete()
     {
-        $GLOBALS["em"]->remove($this);
-        $GLOBALS["em"]->flush();
+        $this->before_save();
+        $class = get_called_class();
+        $ob = new $class;
+        if (!$ob::$_elastic)
+        {
+            $GLOBALS["em"]->remove($this);
+            $GLOBALS["em"]->flush();
+        }
+        else
+        {
+            $client = new \Elasticsearch\Client();
+            $deleteParams = array();
+            $deleteParams['index'] = INDEX;
+            $deleteParams['type'] = str_replace("\\", "_", $class);
+            $deleteParams['id'] = $this->id;
+            $client->delete($deleteParams);
+        }
     }
 
     static function count()

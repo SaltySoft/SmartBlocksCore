@@ -48,6 +48,6 @@ unregisterGlobals();
 callHook();
 */
 
-
+//require_once(ROOT . DS . "Lib" . DS . "Composer" . DS . "vendor" . DS . "autoload.php");
 require_once("MuffinApplication.php");
 MuffinApplication::start();
